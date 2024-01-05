@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>git安装</title>
+    <url>/2024/01/04/git%E5%AE%89%E8%A3%85/</url>
+    <content><![CDATA[<p>记录Windows操作系统安装git工具，图文流程记录：</p>
+<p>系统：Windows11</p>
+<p>git版本：2.24.1.2</p>
+<p>时间：2024-01-04</p>
+<h2 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h2><h3 id="下载git安装包"><a href="#下载git安装包" class="headerlink" title="下载git安装包"></a>下载git安装包</h3><p>下载地址：<a href="https://git-scm.com/downloads">官网</a></p>
+<p>如图下载windows版本即可</p>
+<p><img src="/images/2024-01-04-165803.png" alt="git下载页面" title="git下载页面"></p>
+<hr>
+<h3 id="安装git"><a href="#安装git" class="headerlink" title="安装git"></a>安装git</h3><p>找到下载的git安装包，双击即可</p>
+<h4 id="安装声明"><a href="#安装声明" class="headerlink" title="安装声明"></a>安装声明</h4><p>弹出声明界面，如图</p>
+<p><img src="/images/2024-01-04-172633.png" alt="声明" title="声明"></p>
+<p>直接点击next，进入下一步</p>
+<h4 id="选择组件"><a href="#选择组件" class="headerlink" title="选择组件"></a>选择组件</h4><p>组件选择可以默认，也可以自定义，建议默认，自定义最好勾上git bash组件，之后使用会比较方便</p>
+<p><img src="/images/2024-01-04-172845.png" alt="组件选择" title="组件选择"></p>
+<h4 id="选择Git编辑器"><a href="#选择Git编辑器" class="headerlink" title="选择Git编辑器"></a>选择Git编辑器</h4><p>默认编辑器vim，是在命令行界面使用子广泛的文本编辑器，可以当做练习，以后在Linux上就不会一点不懂</p>
+<p><img src="/images/2024-01-04-184446.png" alt="编辑器选择" title="编辑器选择"></p>
+<h4 id="设置path环境"><a href="#设置path环境" class="headerlink" title="设置path环境"></a>设置path环境</h4><p>第一种配置是“仅从Git Bash使用Git”。这是最安全的选择，因为您的PATH根本不会被修改。你只能使用 Git Bash 的 Git 命令行工具。但是这将不能通过第三方软件使用。</p>
+<p>第二种配置是“从命令行以及第三方软件进行Git”。该选项被认为是安全的，因为它仅向PATH添加了一些最小的Git包装器，以避免使用可选的Unix工具造成环境混乱。</p>
+<p>你将能够从Git Bash，命令提示符和Windows PowerShell以及在PATH中寻找Git的任何第三方软件中使用Git。这也是推荐的选项。</p>
+<p>第三种配置是“从命令提示符使用Git和可选的Unix工具”。警告：这将覆盖Windows工具，如 “ find 和 sort ”。只有在了解其含义后才使用此选项。</p>
+<p>推荐使用默认配置，如图：</p>
+<p><img src="/images/2024-01-04-185016.png" alt="path选择界面" title="path选择界面"></p>
+<h4 id="选择HTTPS后端传输"><a href="#选择HTTPS后端传输" class="headerlink" title="选择HTTPS后端传输"></a>选择HTTPS后端传输</h4><p>第一个选项是“使用 OpenSSL 库”。服务器证书将使用ca-bundle.crt文件进行验证。这也是我们常用的选项。</p>
+<p>第二个选项是“使用本地 Windows 安全通道库”。服务器证书将使用Windows证书存储验证。此选项还允许您使用公司的内部根CA证书，例如通过Active Directory Domain Services 。</p>
+<p>推荐默认选项，如下图：</p>
+<p><img src="/images/2024-01-04-185235.png" alt="HTTPS后端传输" title="HTTPS后端传输"></p>
+<h4 id="配置行尾符号转换"><a href="#配置行尾符号转换" class="headerlink" title="配置行尾符号转换"></a>配置行尾符号转换</h4><p>第一个选项是“签出Windows风格，提交Unix风格的行尾”。签出文本文件时，Git会将LF转换为CRLF。提交文本文件时，CRLF将转换为LF。对于跨平台项目，这是Windows上的推荐设置(“ core.autocrlf”设置为“ true”)</p>
+<p>第二个选项是“按原样签出，提交Unix样式的行尾”。签出文本文件时，Git不会执行任何转换。 提交文本文件时，CRLF将转换为LF。对于跨平台项目，这是Unix上的建议设置(“ core.autocrlf”设置为“ input”)</p>
+<p>第三种选项是“按原样签出，按原样提交”。当签出或提交文本文件时，Git不会执行任何转换。不建议跨平台项目选择此选项(“core.autocrlf”设置为“ false”)</p>
+<p>推荐默认选项，如下图：</p>
+<p><img src="/images/2024-01-04-185345.png" alt="符号转换" title="符号转换"></p>
+<h4 id="配置用于Git-Bash的终端模拟器"><a href="#配置用于Git-Bash的终端模拟器" class="headerlink" title="配置用于Git Bash的终端模拟器"></a>配置用于Git Bash的终端模拟器</h4><p>第一个选项是“使用MinTTY(MSYS2的默认终端)”。Git Bash将使用MinTTY作为终端模拟器，该模拟器具有可调整大小的窗口，非矩形选择和Unicode字体。Windows控制台程序(例如交互式Python)必须通过“ winpty”启动才能在MinTTY中运行。</p>
+<p>第二个选项是“使用Windows的默认控制台窗口”。Git将使用Windows的默认控制台窗口(“cmd.exe”)，该窗口可以与Win32控制台程序(如交互式Python或node.js)一起使用，但默认的回滚非常有限，需要配置为使用unicode 字体以正确显示非ASCII字符，并且在Windows 10之前，其窗口不能自由调整大小，并且只允许矩形文本选择。</p>
+<p>推荐默认选项，如下图：</p>
+<p><img src="/images/2024-01-04-185601.png" alt=""></p>
+<h4 id="配置额外选项"><a href="#配置额外选项" class="headerlink" title="配置额外选项"></a>配置额外选项</h4><p>第一个选项：“启用文件系统缓存”。文件系统数据将被批量读取并缓存在内存中用于某些操作(“core.fscache”设置为“true”)。 这提供了显著的性能提升。</p>
+<p>第二个选项：“启用符号链接”。启用符号链接(需要SeCreateSymbolicLink权限)。请注意，现有存储库不受此设置的影响。</p>
+<p>推荐默认第一个选项，如下图：</p>
+<p><img src="/images/2024-01-04-185642.png" alt="额外选项" title="额外选项"></p>
+<h4 id="配置实验选项"><a href="#配置实验选项" class="headerlink" title="配置实验选项"></a>配置实验选项</h4><p>默认不选，如图</p>
+<p><img src="/images/2024-01-04-185931.png" alt=""></p>
+<p>最后点击install安装即可，安装完成后开始使用</p>
+<h2 id="Git使用"><a href="#Git使用" class="headerlink" title="Git使用"></a>Git使用</h2><p>直接在文件夹目录空白处，右键git bash here即可进入命令行界面，开始使用</p>
+<p>效果如下：</p>
+<p><img src="/images/2024-01-04-190344.png" alt="" title="命令行界面"></p>
+]]></content>
+      <tags>
+        <tag>git</tag>
+      </tags>
+  </entry>
+</search>
