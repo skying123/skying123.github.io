@@ -1,0 +1,16 @@
+/* 文章卡片 */
+#recent-posts > .recent-post-item {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* 侧边栏卡片 */
+.card-widget {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* 文章正文页 */
+#post > div {
+  background: rgba(255, 255, 255, 0.9) !important;
+}
