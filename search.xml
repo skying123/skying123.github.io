@@ -1167,303 +1167,6 @@
       </tags>
   </entry>
   <entry>
-    <title>PostgreSQL 安装、使用</title>
-    <url>/2026/05/14/PostgreSQL%20%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<h1 id="PostgreSQL-安装、使用与多数据库对比教程（含练习及答案）"><a href="#PostgreSQL-安装、使用与多数据库对比教程（含练习及答案）" class="headerlink" title="PostgreSQL 安装、使用与多数据库对比教程（含练习及答案）"></a>PostgreSQL 安装、使用与多数据库对比教程（含练习及答案）</h1><p>本教程将帮助你快速上手 PostgreSQL，通过 Docker Compose 完成环境搭建，掌握常用 SQL 语法，并深入比较它与 MySQL、Oracle 的优缺点。教程最后提供课后练习及参考答案。</p>
-<hr>
-<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
-<li><a href="#1-postgresql-简介">PostgreSQL 简介</a></li>
-<li><a href="#2-docker-compose-安装-postgresql">Docker Compose 安装 PostgreSQL</a></li>
-<li><a href="#3-postgresql-常用语法">PostgreSQL 常用语法</a></li>
-<li><a href="#4-postgresql-vs-mysql">PostgreSQL vs MySQL</a></li>
-<li><a href="#5-postgresql-vs-oracle">PostgreSQL vs Oracle</a></li>
-<li><a href="#6-课后练习">课后练习</a></li>
-<li><a href="#7-练习答案">练习答案</a></li>
-</ol>
-<hr>
-<h2 id="1-PostgreSQL-简介"><a href="#1-PostgreSQL-简介" class="headerlink" title="1. PostgreSQL 简介"></a>1. PostgreSQL 简介</h2><p>PostgreSQL 是一款功能强大的开源对象-关系型数据库系统，拥有超过 30 年的开发历史，以可靠性、数据完整性和标准兼容著称。它支持：</p>
-<ul>
-<li>丰富的数据类型（数组、JSON、范围、几何等）</li>
-<li>完整的 ACID 事务与多版本并发控制 (MVCC)</li>
-<li>函数、存储过程（多种语言）、触发器</li>
-<li>表继承、分区表、全文搜索</li>
-<li>强大的扩展能力（如 PostGIS、Citus）</li>
-</ul>
-<hr>
-<h2 id="2-Docker-Compose-安装-PostgreSQL"><a href="#2-Docker-Compose-安装-PostgreSQL" class="headerlink" title="2. Docker Compose 安装 PostgreSQL"></a>2. Docker Compose 安装 PostgreSQL</h2><h3 id="2-1-前置条件"><a href="#2-1-前置条件" class="headerlink" title="2.1 前置条件"></a>2.1 前置条件</h3><ul>
-<li>安装 Docker 及 Docker Compose（Docker Desktop 已包含）</li>
-<li>基本命令行操作知识</li>
-</ul>
-<h3 id="2-2-编写-docker-compose-yml"><a href="#2-2-编写-docker-compose-yml" class="headerlink" title="2.2 编写 docker-compose.yml"></a>2.2 编写 <code>docker-compose.yml</code></h3><p>创建一个项目目录（例如 <code>pg-tutorial</code>），在其中新建 <code>docker-compose.yml</code>：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.8&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">postgres:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">postgres:16-alpine</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">pg-tutorial</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">POSTGRES_USER:</span> <span class="string">myuser</span></span><br><span class="line">      <span class="attr">POSTGRES_PASSWORD:</span> <span class="string">mypassword</span></span><br><span class="line">      <span class="attr">POSTGRES_DB:</span> <span class="string">tutorial</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;5432:5432&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">pgdata:/var/lib/postgresql/data</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./init.sql:/docker-entrypoint-initdb.d/init.sql</span>   <span class="comment"># 可选初始化脚本</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">adminer:</span>                <span class="comment"># 轻量 Web 管理工具（可选）</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">adminer</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">pgdata:</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-3-启动与连接"><a href="#2-3-启动与连接" class="headerlink" title="2.3 启动与连接"></a>2.3 启动与连接</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在 docker-compose.yml 所在目录执行</span></span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
-<p>验证服务：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it pg-tutorial psql -U myuser -d tutorial</span><br></pre></td></tr></table></figure></p>
-<p>你也可以通过 Adminer 访问：浏览器打开 <code>http://localhost:8080</code>，系统选择 PostgreSQL，服务器 <code>postgres</code>，用户名 <code>myuser</code>，密码 <code>mypassword</code>，数据库 <code>tutorial</code>。</p>
-<h3 id="2-4-基本管理命令"><a href="#2-4-基本管理命令" class="headerlink" title="2.4 基本管理命令"></a>2.4 基本管理命令</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 列出数据库</span></span><br><span class="line">\l</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 切换数据库</span></span><br><span class="line">\c tutorial</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 列出所有表</span></span><br><span class="line">\dt</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看表结构</span></span><br><span class="line">\d table_name</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 退出</span></span><br><span class="line">\q</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="3-PostgreSQL-常用语法"><a href="#3-PostgreSQL-常用语法" class="headerlink" title="3. PostgreSQL 常用语法"></a>3. PostgreSQL 常用语法</h2><h3 id="3-1-数据类型速览"><a href="#3-1-数据类型速览" class="headerlink" title="3.1 数据类型速览"></a>3.1 数据类型速览</h3><ul>
-<li><strong>数值</strong>：<code>INTEGER</code>、<code>BIGINT</code>、<code>NUMERIC(precision, scale)</code>、<code>SERIAL</code>（自增）</li>
-<li><strong>字符</strong>：<code>VARCHAR(n)</code>、<code>CHAR(n)</code>、<code>TEXT</code></li>
-<li><strong>日期/时间</strong>：<code>DATE</code>、<code>TIME</code>、<code>TIMESTAMP</code>、<code>INTERVAL</code></li>
-<li><strong>布尔</strong>：<code>BOOLEAN</code></li>
-<li><strong>JSON</strong>：<code>JSON</code>、<code>JSONB</code>（推荐使用二进制 JSON）</li>
-<li><strong>数组</strong>：<code>INTEGER[]</code>、<code>TEXT[]</code></li>
-<li><strong>UUID</strong>：<code>UUID</code> 结合 <code>gen_random_uuid()</code> 生成</li>
-</ul>
-<h3 id="3-2-数据库与表操作"><a href="#3-2-数据库与表操作" class="headerlink" title="3.2 数据库与表操作"></a>3.2 数据库与表操作</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建数据库（在 shell 中 createdb 命令，或 SQL 超级用户下）</span></span><br><span class="line"><span class="keyword">CREATE</span> DATABASE shop;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> products (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    name <span class="type">VARCHAR</span>(<span class="number">200</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    price <span class="type">NUMERIC</span>(<span class="number">10</span>,<span class="number">2</span>) <span class="keyword">CHECK</span> (price <span class="operator">&gt;</span> <span class="number">0</span>),</span><br><span class="line">    tags TEXT[],</span><br><span class="line">    attributes JSONB,</span><br><span class="line">    created_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改表</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> products <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> stock <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除表</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> products;</span><br></pre></td></tr></table></figure>
-<h3 id="3-3-CRUD-操作"><a href="#3-3-CRUD-操作" class="headerlink" title="3.3 CRUD 操作"></a>3.3 CRUD 操作</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 插入</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> products (name, price, tags, attributes)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;Laptop&#x27;</span>, <span class="number">999.99</span>, <span class="keyword">ARRAY</span>[<span class="string">&#x27;electronics&#x27;</span>,<span class="string">&#x27;portable&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;&#123;&quot;brand&quot;:&quot;TechBrand&quot;, &quot;color&quot;:&quot;silver&quot;&#125;&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查询</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> price <span class="operator">&lt;</span> <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 更新</span></span><br><span class="line"><span class="keyword">UPDATE</span> products <span class="keyword">SET</span> price <span class="operator">=</span> <span class="number">949.99</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> <span class="string">&#x27;Laptop&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
-<h3 id="3-4-高级查询"><a href="#3-4-高级查询" class="headerlink" title="3.4 高级查询"></a>3.4 高级查询</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- JOIN 示例（假设有 categories 表）</span></span><br><span class="line"><span class="keyword">SELECT</span> p.name, c.category_name</span><br><span class="line"><span class="keyword">FROM</span> products p</span><br><span class="line"><span class="keyword">JOIN</span> categories c <span class="keyword">ON</span> p.category_id <span class="operator">=</span> c.id;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 子查询</span></span><br><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> price <span class="operator">&gt;</span> (<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(price) <span class="keyword">FROM</span> products);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 窗口函数（排名）</span></span><br><span class="line"><span class="keyword">SELECT</span> name, price,</span><br><span class="line">       <span class="built_in">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">ORDER</span> <span class="keyword">BY</span> price <span class="keyword">DESC</span>) <span class="keyword">AS</span> price_rank</span><br><span class="line"><span class="keyword">FROM</span> products;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- JSONB 操作</span></span><br><span class="line"><span class="keyword">SELECT</span> name, attributes<span class="operator">-</span><span class="operator">&gt;&gt;</span><span class="string">&#x27;brand&#x27;</span> <span class="keyword">AS</span> brand</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> attributes @<span class="operator">&gt;</span> <span class="string">&#x27;&#123;&quot;color&quot;:&quot;silver&quot;&#125;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 数组操作</span></span><br><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="string">&#x27;electronics&#x27;</span> <span class="operator">=</span> <span class="keyword">ANY</span>(tags);</span><br></pre></td></tr></table></figure>
-<h3 id="3-5-索引"><a href="#3-5-索引" class="headerlink" title="3.5 索引"></a>3.5 索引</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- B-tree 索引</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_products_price <span class="keyword">ON</span> products(price);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 唯一索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX idx_products_name <span class="keyword">ON</span> products(name);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- GIN 索引用于 JSONB 和数组</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_products_attributes <span class="keyword">ON</span> products <span class="keyword">USING</span> GIN(attributes);</span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_products_tags <span class="keyword">ON</span> products <span class="keyword">USING</span> GIN(tags);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 部分索引</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_products_stock_low <span class="keyword">ON</span> products(stock) <span class="keyword">WHERE</span> stock <span class="operator">&lt;</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
-<h3 id="3-6-事务与并发控制"><a href="#3-6-事务与并发控制" class="headerlink" title="3.6 事务与并发控制"></a>3.6 事务与并发控制</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> products <span class="keyword">SET</span> stock <span class="operator">=</span> stock <span class="operator">-</span> <span class="number">1</span> <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">AND</span> stock <span class="operator">&gt;</span> <span class="number">0</span>;</span><br><span class="line"><span class="comment">-- 检查影响行数，若为0则回滚</span></span><br><span class="line"><span class="keyword">COMMIT</span>; <span class="comment">-- 或 ROLLBACK;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 设置事务隔离级别</span></span><br><span class="line"><span class="keyword">BEGIN</span> ISOLATION LEVEL SERIALIZABLE;</span><br><span class="line"><span class="comment">-- ...</span></span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
-<p>PostgreSQL 默认为 READ COMMITTED 隔离级别，MVCC 保证读不阻塞写。</p>
-<h3 id="3-7-视图、函数与存储过程"><a href="#3-7-视图、函数与存储过程" class="headerlink" title="3.7 视图、函数与存储过程"></a>3.7 视图、函数与存储过程</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 视图</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> product_summary <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> name, price, stock <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> stock <span class="operator">&gt;</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- SQL 函数</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> get_discounted_price(prod_id <span class="type">INT</span>, discount <span class="type">NUMERIC</span>)</span><br><span class="line"><span class="keyword">RETURNS</span> <span class="type">NUMERIC</span> <span class="keyword">AS</span> $$</span><br><span class="line">  <span class="keyword">SELECT</span> price <span class="operator">*</span> (<span class="number">1</span> <span class="operator">-</span> discount) <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> id <span class="operator">=</span> prod_id;</span><br><span class="line">$$ <span class="keyword">LANGUAGE</span> <span class="keyword">SQL</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- PL/pgSQL 函数</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> update_stock(prod_id <span class="type">INT</span>, qty <span class="type">INT</span>) <span class="keyword">RETURNS</span> VOID <span class="keyword">AS</span> $$</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">UPDATE</span> products <span class="keyword">SET</span> stock <span class="operator">=</span> stock <span class="operator">+</span> qty <span class="keyword">WHERE</span> id <span class="operator">=</span> prod_id;</span><br><span class="line">  IF <span class="keyword">NOT</span> FOUND <span class="keyword">THEN</span></span><br><span class="line">    RAISE EXCEPTION <span class="string">&#x27;Product not found&#x27;</span>;</span><br><span class="line">  <span class="keyword">END</span> IF;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line">$$ <span class="keyword">LANGUAGE</span> plpgsql;</span><br></pre></td></tr></table></figure>
-<h3 id="3-8-表分区"><a href="#3-8-表分区" class="headerlink" title="3.8 表分区"></a>3.8 表分区</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建范围分区表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders (</span><br><span class="line">    id SERIAL,</span><br><span class="line">    order_date <span class="type">DATE</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    amount <span class="type">NUMERIC</span></span><br><span class="line">) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (order_date);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建分区</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders_2024 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> orders</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2024-01-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2025-01-01&#x27;</span>);</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders_2025 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> orders</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2025-01-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2026-01-01&#x27;</span>);</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="4-PostgreSQL-vs-MySQL"><a href="#4-PostgreSQL-vs-MySQL" class="headerlink" title="4. PostgreSQL vs MySQL"></a>4. PostgreSQL vs MySQL</h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>维度</th>
-<th>PostgreSQL</th>
-<th>MySQL</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>SQL 标准兼容</strong></td>
-<td>高度兼容，支持窗口函数、CTE、CHECK约束等</td>
-<td>部分兼容，早期版本缺窗口函数等，8.0后改进</td>
-</tr>
-<tr>
-<td><strong>数据类型</strong></td>
-<td>丰富：数组、JSONB、UUID、范围、几何等</td>
-<td>支持 JSON，但不支持数组列；数据类型较简单</td>
-</tr>
-<tr>
-<td><strong>自增主键</strong></td>
-<td><code>SERIAL</code> / <code>IDENTITY</code> 列</td>
-<td><code>AUTO_INCREMENT</code></td>
-</tr>
-<tr>
-<td><strong>存储引擎</strong></td>
-<td>单一引擎，MVCC 全引擎支持</td>
-<td>多种引擎（InnoDB, MyISAM），InnoDB 为主要事务性引擎</td>
-</tr>
-<tr>
-<td><strong>事务隔离</strong></td>
-<td>支持完整的隔离级别，默认 Read Committed</td>
-<td>支持（InnoDB），默认可重复读</td>
-</tr>
-<tr>
-<td><strong>复制与集群</strong></td>
-<td>流复制、逻辑复制、Citus 分布式；需要扩展实现读写分离</td>
-<td>异步/半同步复制，MySQL Group Replication，InnoDB Cluster</td>
-</tr>
-<tr>
-<td><strong>全文搜索</strong></td>
-<td>内置强大全文搜索（<code>tsvector</code>）</td>
-<td>内置但功能较弱（InnoDB 全文索引）</td>
-</tr>
-<tr>
-<td><strong>JSON 支持</strong></td>
-<td>JSONB（二进制，可索引）性能优异</td>
-<td>JSON 函数和生成列索引，较方便但深度不如 JSONB</td>
-</tr>
-<tr>
-<td><strong>性能</strong></td>
-<td>复杂查询、分析查询优势；写并发可能稍弱</td>
-<td>简单读写、高并发 OLTP 表现优秀</td>
-</tr>
-<tr>
-<td><strong>扩展性</strong></td>
-<td>扩展生态极强（PostGIS, Citus, TimescaleDB）</td>
-<td>插件式存储引擎，但功能扩展不如 PG 灵活</td>
-</tr>
-<tr>
-<td><strong>易用性</strong></td>
-<td>初期学习曲线稍高，管理相对复杂</td>
-<td>易安装配置，社区生态大，新手友好</td>
-</tr>
-<tr>
-<td><strong>优点</strong></td>
-<td>数据完整性严格，功能丰富，扩展强，适合复杂业务</td>
-<td>简单快捷，流行度高，高并发读写性能好</td>
-</tr>
-<tr>
-<td><strong>缺点</strong></td>
-<td>内存消耗较大，复制配置稍复杂，插件过多需甄别</td>
-<td>标准兼容弱，严格约束默认不开启（如SQL_MODE）</td>
-</tr>
-<tr>
-<td><strong>适用场景</strong></td>
-<td>复杂查询、地理信息、金融、数据分析、需要高级数据类型</td>
-<td>Web应用、SaaS、标准化 LAMP/LEMP 架构</td>
-</tr>
-</tbody>
-</table>
-</div>
-<hr>
-<h2 id="5-PostgreSQL-vs-Oracle"><a href="#5-PostgreSQL-vs-Oracle" class="headerlink" title="5. PostgreSQL vs Oracle"></a>5. PostgreSQL vs Oracle</h2><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>维度</th>
-<th>PostgreSQL</th>
-<th>Oracle</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>许可证</strong></td>
-<td>开源 (MIT/PostgreSQL 许可)，免费</td>
-<td>商业专有，许可证费用极高</td>
-</tr>
-<tr>
-<td><strong>SQL 语法</strong></td>
-<td>遵循 SQL 标准，PL/pgSQL 类似 PL/SQL</td>
-<td>PL/SQL 功能强大，语法略有不同</td>
-</tr>
-<tr>
-<td><strong>高级特性</strong></td>
-<td>分区表、物化视图、并行查询、JIT 编译、逻辑复制</td>
-<td>分区、物化视图、RAC、Data Guard、高级队列、闪回</td>
-</tr>
-<tr>
-<td><strong>并发控制</strong></td>
-<td>MVCC，无回滚段，需要 VACUUM 清理</td>
-<td>回滚段 + MVCC，读一致性优秀，但可能 ORA-01555</td>
-</tr>
-<tr>
-<td><strong>性能优化</strong></td>
-<td>基于统计的优化器，需要手动调参和索引</td>
-<td>成熟的优化器和自动调优（AWR, ADDM）</td>
-</tr>
-<tr>
-<td><strong>高可用</strong></td>
-<td>流复制、Patroni 自动化切换</td>
-<td>Data Guard (物理/逻辑), RAC（共享磁盘集群）</td>
-</tr>
-<tr>
-<td><strong>管理工具</strong></td>
-<td>pgAdmin, psql, DBeaver 等</td>
-<td>Oracle Enterprise Manager, SQL*Plus, SQL Developer</td>
-</tr>
-<tr>
-<td><strong>运维成本</strong></td>
-<td>开源，免费社区支持或商业支持（EDB, Crunchy）</td>
-<td>需购买许可，DBA 成本高</td>
-</tr>
-<tr>
-<td><strong>迁移难度</strong></td>
-<td>从 Oracle 迁移需注意 PL/SQL 差异，工具 ora2pg</td>
-<td>锁定客户，迁移困难</td>
-</tr>
-<tr>
-<td><strong>优点</strong></td>
-<td>零成本，活跃社区，持续创新，可与各种平台集成</td>
-<td>企业级最成熟，商业支持强，适合超大型混合负载</td>
-</tr>
-<tr>
-<td><strong>缺点</strong></td>
-<td>管理不如 Oracle 自动化，某些企业审计功能需插件</td>
-<td>成本过高，厂商锁定，闭源</td>
-</tr>
-<tr>
-<td><strong>适用场景</strong></td>
-<td>中大型企业，预算敏感，需要现代数据库功能</td>
-<td>财力雄厚的超大型企业、政府，以及要求 Oracle 特定生态</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p><strong>对比总结</strong>：PostgreSQL 在功能上已能与 Oracle 一较高下，且在开源生态上占有巨大优势。对于大多数新项目，如果无需 Oracle 独有的 RAC 集群、高级队列或特定法规认证，PostgreSQL 完全可胜任，且能节省大量许可费用。</p>
-<hr>
-<h2 id="6-课后练习"><a href="#6-课后练习" class="headerlink" title="6. 课后练习"></a>6. 课后练习</h2><p>请使用之前搭建的 Docker Compose PostgreSQL 环境完成以下练习。所有 SQL 语句需在 <code>tutorial</code> 数据库内执行。</p>
-<h3 id="练习1：环境与基础建表"><a href="#练习1：环境与基础建表" class="headerlink" title="练习1：环境与基础建表"></a>练习1：环境与基础建表</h3><ol>
-<li>使用 <code>psql</code> 或 Adminer 连接到 PostgreSQL 容器。</li>
-<li>创建表 <code>authors</code>：<ul>
-<li><code>id</code>：主键，自增整数</li>
-<li><code>name</code>：文本，非空</li>
-<li><code>bio</code>：文本，允许为空</li>
-</ul>
-</li>
-<li>创建表 <code>books</code>：<ul>
-<li><code>id</code>：主键，自增整数</li>
-<li><code>title</code>：变长字符串（最长300），非空</li>
-<li><code>author_id</code>：整数，引用 <code>authors(id)</code>，外键</li>
-<li><code>genre</code>：文本数组</li>
-<li><code>published_date</code>：日期</li>
-<li><code>metadata</code>：JSONB 类型（存放评分、页数等）</li>
-<li><code>price</code>：numeric(8,2)，必须大于0</li>
-</ul>
-</li>
-<li>在 <code>books.title</code> 上创建唯一索引，在 <code>books.metadata</code> 上创建 GIN 索引。</li>
-</ol>
-<h3 id="练习2：数据操作与查询"><a href="#练习2：数据操作与查询" class="headerlink" title="练习2：数据操作与查询"></a>练习2：数据操作与查询</h3><ol>
-<li>向 <code>authors</code> 表中至少插入3位作者。</li>
-<li>向 <code>books</code> 表插入至少5本书，确保使用数组字段和 JSONB 字段。例如：<ul>
-<li><code>genre</code> 包含 <code>&#123;&#39;fiction&#39;, &#39;adventure&#39;&#125;</code>，<code>metadata</code> 包含 <code>&#123;&quot;rating&quot;: 9.2, &quot;pages&quot;: 320&#125;</code>。</li>
-</ul>
-</li>
-<li>写一条 SELECT 查询，列出所有书籍及其作者姓名。</li>
-<li>写一条查询，找出所有 <code>genre</code> 数组中含有 <code>fiction</code> 的书籍。</li>
-<li>写一条查询，从 <code>metadata</code> 中提取 <code>rating</code>，筛选评分大于 8.5 的书籍。</li>
-<li>写一条使用窗口函数的查询，按价格降序排名，列出书名、价格和排名。</li>
-</ol>
-<h3 id="练习3：索引与性能"><a href="#练习3：索引与性能" class="headerlink" title="练习3：索引与性能"></a>练习3：索引与性能</h3><ol>
-<li>使用 <code>EXPLAIN</code> 分析前一个查询（按价格排序并排名）的执行计划。</li>
-<li>假设有一张巨大的 <code>books</code> 表，经常需要按 <code>published_date</code> 范围查询，请写出对应的索引创建语句。</li>
-<li>创建一个部分索引，仅索引价格大于 100 的书籍。</li>
-</ol>
-<h3 id="练习4：事务与并发"><a href="#练习4：事务与并发" class="headerlink" title="练习4：事务与并发"></a>练习4：事务与并发</h3><ol>
-<li>编写一个事务：先添加一本新书，然后更新对应作者的 <code>bio</code> 字段（如果为空则设置一个默认介绍）。若任何一步失败，全部回滚。</li>
-<li>开启两个并行会话 (<code>psql</code>)，模拟并发场景：其中一个会话减少某本书的价格20%，在提交前让另一个会话读取。记录读取到的值，验证默认隔离级别下的行为。</li>
-</ol>
-<h3 id="练习5：综合小型项目"><a href="#练习5：综合小型项目" class="headerlink" title="练习5：综合小型项目"></a>练习5：综合小型项目</h3><p>设计一个简单的“订单系统”：</p>
-<ul>
-<li>表 <code>customers</code>：id, name, email（唯一）</li>
-<li>表 <code>orders</code>：id, customer_id, order_date, total_amount</li>
-<li>表 <code>order_items</code>：id, order_id, book_id, quantity</li>
-</ul>
-<ol>
-<li>写出对应的 CREATE TABLE 语句，确保外键关系和合适的数据类型。</li>
-<li>插入一些示例数据。</li>
-<li>写一个查询：列出每个客户的姓名、邮箱以及他们下过的订单总数。</li>
-<li>写一个视图 <code>order_detail_view</code>，包含订单号、客户姓名、书名、数量、单价、小计（price*quantity）。</li>
-<li>写一个函数 <code>place_order</code>，接收客户 ID，一个包含 <code>book_id</code> 和 <code>quantity</code> 的数组（可以使用 JSON 数组），在单个事务内创建订单和订单项，并更新书籍库存（注意：在 books 表上加 stock 列，默认10）。函数应返回新订单的 ID。</li>
-</ol>
-<hr>
-<h2 id="7-练习答案"><a href="#7-练习答案" class="headerlink" title="7. 练习答案"></a>7. 练习答案</h2><h3 id="练习1-答案"><a href="#练习1-答案" class="headerlink" title="练习1 答案"></a>练习1 答案</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 连接 (略)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 创建 authors 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> authors (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    name TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    bio TEXT</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 创建 books 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> books (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    title <span class="type">VARCHAR</span>(<span class="number">300</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    author_id <span class="type">INT</span> <span class="keyword">REFERENCES</span> authors(id),</span><br><span class="line">    genre TEXT[],</span><br><span class="line">    published_date <span class="type">DATE</span>,</span><br><span class="line">    metadata JSONB,</span><br><span class="line">    price <span class="type">NUMERIC</span>(<span class="number">8</span>,<span class="number">2</span>) <span class="keyword">CHECK</span> (price <span class="operator">&gt;</span> <span class="number">0</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 4. 创建索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX idx_books_title <span class="keyword">ON</span> books(title);</span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_books_metadata <span class="keyword">ON</span> books <span class="keyword">USING</span> GIN(metadata);</span><br></pre></td></tr></table></figure>
-<h3 id="练习2-答案"><a href="#练习2-答案" class="headerlink" title="练习2 答案"></a>练习2 答案</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 插入作者</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> authors (name, bio) <span class="keyword">VALUES</span></span><br><span class="line">(<span class="string">&#x27;J.K. Rowling&#x27;</span>, <span class="string">&#x27;British author, best known for Harry Potter.&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;George R.R. Martin&#x27;</span>, <span class="string">&#x27;Author of A Song of Ice and Fire.&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;J.R.R. Tolkien&#x27;</span>, <span class="string">&#x27;Writer of The Lord of the Rings.&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 插入书籍</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> books (title, author_id, genre, published_date, metadata, price)</span><br><span class="line"><span class="keyword">VALUES</span></span><br><span class="line">(<span class="string">&#x27;Harry Potter and the Philosopher&#x27;&#x27;s Stone&#x27;</span>, <span class="number">1</span>,</span><br><span class="line"> <span class="keyword">ARRAY</span>[<span class="string">&#x27;fantasy&#x27;</span>,<span class="string">&#x27;fiction&#x27;</span>], <span class="string">&#x27;1997-06-26&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#123;&quot;rating&quot;: 9.1, &quot;pages&quot;: 309&#125;&#x27;</span>, <span class="number">19.99</span>),</span><br><span class="line">(<span class="string">&#x27;A Game of Thrones&#x27;</span>, <span class="number">2</span>,</span><br><span class="line"> <span class="keyword">ARRAY</span>[<span class="string">&#x27;fantasy&#x27;</span>,<span class="string">&#x27;fiction&#x27;</span>,<span class="string">&#x27;political&#x27;</span>], <span class="string">&#x27;1996-08-01&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#123;&quot;rating&quot;: 9.3, &quot;pages&quot;: 694&#125;&#x27;</span>, <span class="number">24.95</span>),</span><br><span class="line">(<span class="string">&#x27;The Hobbit&#x27;</span>, <span class="number">3</span>,</span><br><span class="line"> <span class="keyword">ARRAY</span>[<span class="string">&#x27;fantasy&#x27;</span>,<span class="string">&#x27;adventure&#x27;</span>], <span class="string">&#x27;1937-09-21&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#123;&quot;rating&quot;: 9.0, &quot;pages&quot;: 310&#125;&#x27;</span>, <span class="number">14.99</span>),</span><br><span class="line">(<span class="string">&#x27;The Fellowship of the Ring&#x27;</span>, <span class="number">3</span>,</span><br><span class="line"> <span class="keyword">ARRAY</span>[<span class="string">&#x27;fantasy&#x27;</span>,<span class="string">&#x27;epic&#x27;</span>], <span class="string">&#x27;1954-07-29&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#123;&quot;rating&quot;: 9.4, &quot;pages&quot;: 423&#125;&#x27;</span>, <span class="number">17.50</span>),</span><br><span class="line">(<span class="string">&#x27;A Clash of Kings&#x27;</span>, <span class="number">2</span>,</span><br><span class="line"> <span class="keyword">ARRAY</span>[<span class="string">&#x27;fantasy&#x27;</span>,<span class="string">&#x27;fiction&#x27;</span>,<span class="string">&#x27;political&#x27;</span>], <span class="string">&#x27;1998-11-16&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#123;&quot;rating&quot;: 9.2, &quot;pages&quot;: 768&#125;&#x27;</span>, <span class="number">22.00</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 书籍与作者姓名</span></span><br><span class="line"><span class="keyword">SELECT</span> b.title, a.name <span class="keyword">AS</span> author</span><br><span class="line"><span class="keyword">FROM</span> books b</span><br><span class="line"><span class="keyword">JOIN</span> authors a <span class="keyword">ON</span> b.author_id <span class="operator">=</span> a.id;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 4. 包含 fiction 的书籍</span></span><br><span class="line"><span class="keyword">SELECT</span> title <span class="keyword">FROM</span> books <span class="keyword">WHERE</span> <span class="string">&#x27;fiction&#x27;</span> <span class="operator">=</span> <span class="keyword">ANY</span>(genre);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 5. 评分大于 8.5</span></span><br><span class="line"><span class="keyword">SELECT</span> title, metadata<span class="operator">-</span><span class="operator">&gt;&gt;</span><span class="string">&#x27;rating&#x27;</span> <span class="keyword">AS</span> rating</span><br><span class="line"><span class="keyword">FROM</span> books</span><br><span class="line"><span class="keyword">WHERE</span> (metadata<span class="operator">-</span><span class="operator">&gt;&gt;</span><span class="string">&#x27;rating&#x27;</span>)::<span class="type">numeric</span> <span class="operator">&gt;</span> <span class="number">8.5</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 6. 价格排名</span></span><br><span class="line"><span class="keyword">SELECT</span> title, price,</span><br><span class="line">       <span class="built_in">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">ORDER</span> <span class="keyword">BY</span> price <span class="keyword">DESC</span>) <span class="keyword">AS</span> price_rank</span><br><span class="line"><span class="keyword">FROM</span> books;</span><br></pre></td></tr></table></figure>
-<h3 id="练习3-答案"><a href="#练习3-答案" class="headerlink" title="练习3 答案"></a>练习3 答案</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 分析查询</span></span><br><span class="line">EXPLAIN ANALYZE</span><br><span class="line"><span class="keyword">SELECT</span> title, price, <span class="built_in">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">ORDER</span> <span class="keyword">BY</span> price <span class="keyword">DESC</span>)</span><br><span class="line"><span class="keyword">FROM</span> books;</span><br><span class="line"><span class="comment">-- 观察执行计划，注意 Sort 操作和索引使用情况。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 日期范围查询索引</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_books_published_date <span class="keyword">ON</span> books(published_date);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 部分索引</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_books_high_price <span class="keyword">ON</span> books(price) <span class="keyword">WHERE</span> price <span class="operator">&gt;</span> <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
-<h3 id="练习4-答案"><a href="#练习4-答案" class="headerlink" title="练习4 答案"></a>练习4 答案</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 事务操作</span></span><br><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> books (title, author_id, genre, published_date, metadata, price)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;New Book&#x27;</span>, <span class="number">1</span>, <span class="keyword">ARRAY</span>[<span class="string">&#x27;test&#x27;</span>], <span class="built_in">CURRENT_DATE</span>, <span class="string">&#x27;&#123;&#125;&#x27;</span>, <span class="number">10.00</span>);</span><br><span class="line"><span class="keyword">UPDATE</span> authors <span class="keyword">SET</span> bio <span class="operator">=</span> <span class="built_in">COALESCE</span>(bio, <span class="string">&#x27;Default bio&#x27;</span>) <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
-<ol>
-<li>并发模拟：</li>
-</ol>
-<ul>
-<li>会话1：<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> books <span class="keyword">SET</span> price <span class="operator">=</span> price <span class="operator">*</span> <span class="number">0.8</span> <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="comment">-- 不提交</span></span><br></pre></td></tr></table></figure></li>
-<li>会话2：<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> price <span class="keyword">FROM</span> books <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="comment">-- 默认 READ COMMITTED 下，会话2读到的是更新前的原始价格，因为会话1未提交。</span></span><br></pre></td></tr></table></figure></li>
-<li>会话1 <code>COMMIT</code> 后，会话2再次查询将看到新价格。</li>
-</ul>
-<h3 id="练习5-答案"><a href="#练习5-答案" class="headerlink" title="练习5 答案"></a>练习5 答案</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 添加 stock 列到 books（若无则加）</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> books <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> stock <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建 customers 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> customers (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    name TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    email TEXT <span class="keyword">UNIQUE</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建 orders 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    customer_id <span class="type">INT</span> <span class="keyword">REFERENCES</span> customers(id),</span><br><span class="line">    order_date <span class="type">DATE</span> <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_DATE</span>,</span><br><span class="line">    total_amount <span class="type">NUMERIC</span>(<span class="number">10</span>,<span class="number">2</span>) <span class="keyword">DEFAULT</span> <span class="number">0</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建 order_items 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> order_items (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    order_id <span class="type">INT</span> <span class="keyword">REFERENCES</span> orders(id),</span><br><span class="line">    book_id <span class="type">INT</span> <span class="keyword">REFERENCES</span> books(id),</span><br><span class="line">    quantity <span class="type">INT</span> <span class="keyword">CHECK</span> (quantity <span class="operator">&gt;</span> <span class="number">0</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 插入示例数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> customers (name, email) <span class="keyword">VALUES</span></span><br><span class="line">(<span class="string">&#x27;Alice Smith&#x27;</span>, <span class="string">&#x27;alice@example.com&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;Bob Jones&#x27;</span>, <span class="string">&#x27;bob@example.com&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 客户订单总数</span></span><br><span class="line"><span class="keyword">SELECT</span> c.name, c.email, <span class="built_in">COUNT</span>(o.id) <span class="keyword">AS</span> order_count</span><br><span class="line"><span class="keyword">FROM</span> customers c</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> orders o <span class="keyword">ON</span> c.id <span class="operator">=</span> o.customer_id</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> c.id;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 4. 视图</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> order_detail_view <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> o.id <span class="keyword">AS</span> order_id, c.name <span class="keyword">AS</span> customer_name, b.title <span class="keyword">AS</span> book_title,</span><br><span class="line">       oi.quantity, b.price <span class="keyword">AS</span> unit_price,</span><br><span class="line">       (oi.quantity <span class="operator">*</span> b.price) <span class="keyword">AS</span> subtotal</span><br><span class="line"><span class="keyword">FROM</span> orders o</span><br><span class="line"><span class="keyword">JOIN</span> customers c <span class="keyword">ON</span> o.customer_id <span class="operator">=</span> c.id</span><br><span class="line"><span class="keyword">JOIN</span> order_items oi <span class="keyword">ON</span> o.id <span class="operator">=</span> oi.order_id</span><br><span class="line"><span class="keyword">JOIN</span> books b <span class="keyword">ON</span> oi.book_id <span class="operator">=</span> b.id;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 5. 创建下订单函数（使用JSON数组）</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">OR</span> REPLACE <span class="keyword">FUNCTION</span> place_order(</span><br><span class="line">    cust_id <span class="type">INT</span>,</span><br><span class="line">    items_json JSONB   <span class="comment">-- 格式: [&#123;&quot;book_id&quot;: 1, &quot;quantity&quot;: 2&#125;, ...]</span></span><br><span class="line">) <span class="keyword">RETURNS</span> <span class="type">INT</span> <span class="keyword">AS</span> $$</span><br><span class="line"><span class="keyword">DECLARE</span></span><br><span class="line">    new_order_id <span class="type">INT</span>;</span><br><span class="line">    item RECORD;</span><br><span class="line">    total <span class="type">NUMERIC</span>(<span class="number">10</span>,<span class="number">2</span>) :<span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    book_price <span class="type">NUMERIC</span>;</span><br><span class="line">    book_stock <span class="type">INT</span>;</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="comment">-- 创建订单</span></span><br><span class="line">    <span class="keyword">INSERT</span> <span class="keyword">INTO</span> orders (customer_id) <span class="keyword">VALUES</span> (cust_id) RETURNING id <span class="keyword">INTO</span> new_order_id;</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 遍历购物车项</span></span><br><span class="line">    <span class="keyword">FOR</span> item <span class="keyword">IN</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> jsonb_to_recordset(items_json) <span class="keyword">AS</span> x(book_id <span class="type">INT</span>, quantity <span class="type">INT</span>)</span><br><span class="line">    LOOP</span><br><span class="line">        <span class="comment">-- 查询书籍价格和库存（加锁防止超卖）</span></span><br><span class="line">        <span class="keyword">SELECT</span> price, stock <span class="keyword">INTO</span> book_price, book_stock</span><br><span class="line">        <span class="keyword">FROM</span> books <span class="keyword">WHERE</span> id <span class="operator">=</span> item.book_id <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"></span><br><span class="line">        IF <span class="keyword">NOT</span> FOUND <span class="keyword">THEN</span></span><br><span class="line">            RAISE EXCEPTION <span class="string">&#x27;Book % not found&#x27;</span>, item.book_id;</span><br><span class="line">        <span class="keyword">END</span> IF;</span><br><span class="line"></span><br><span class="line">        IF book_stock <span class="operator">&lt;</span> item.quantity <span class="keyword">THEN</span></span><br><span class="line">            RAISE EXCEPTION <span class="string">&#x27;Not enough stock for book %&#x27;</span>, item.book_id;</span><br><span class="line">        <span class="keyword">END</span> IF;</span><br><span class="line"></span><br><span class="line">        <span class="comment">-- 插入订单项</span></span><br><span class="line">        <span class="keyword">INSERT</span> <span class="keyword">INTO</span> order_items (order_id, book_id, quantity)</span><br><span class="line">        <span class="keyword">VALUES</span> (new_order_id, item.book_id, item.quantity);</span><br><span class="line"></span><br><span class="line">        <span class="comment">-- 更新库存</span></span><br><span class="line">        <span class="keyword">UPDATE</span> books <span class="keyword">SET</span> stock <span class="operator">=</span> stock <span class="operator">-</span> item.quantity <span class="keyword">WHERE</span> id <span class="operator">=</span> item.book_id;</span><br><span class="line"></span><br><span class="line">        total :<span class="operator">=</span> total <span class="operator">+</span> (book_price <span class="operator">*</span> item.quantity);</span><br><span class="line">    <span class="keyword">END</span> LOOP;</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 更新订单总金额</span></span><br><span class="line">    <span class="keyword">UPDATE</span> orders <span class="keyword">SET</span> total_amount <span class="operator">=</span> total <span class="keyword">WHERE</span> id <span class="operator">=</span> new_order_id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">RETURN</span> new_order_id;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line">$$ <span class="keyword">LANGUAGE</span> plpgsql;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 调用示例：</span></span><br><span class="line"><span class="keyword">SELECT</span> place_order(<span class="number">1</span>, <span class="string">&#x27;[&#123;&quot;book_id&quot;: 1, &quot;quantity&quot;: 2&#125;, &#123;&quot;book_id&quot;: 3, &quot;quantity&quot;: 1&#125;]&#x27;</span>);</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="学习建议"><a href="#学习建议" class="headerlink" title="学习建议"></a>学习建议</h2><ul>
-<li>亲手敲打每个 SQL 语句，多使用 <code>EXPLAIN</code> 观察查询计划。</li>
-<li>尝试将 MySQL 或 Oracle 中的个人项目迁移到 PostgreSQL，体会差异。</li>
-<li>深入学习官方文档和高级主题（复制、监控、性能优化）。</li>
-</ul>
-<p>祝学习顺利，PostgreSQL 之旅愉快！</p>
-]]></content>
-      <categories>
-        <category>数据库</category>
-      </categories>
-      <tags>
-        <tag>PostgreSQL</tag>
-        <tag>PostgreSQL 命令</tag>
-        <tag>Docker安装</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Docker数据库全家桶：MySQL、Oracle、PostgreSQL、Redis完整安装与远程连接指南</title>
     <url>/2026/05/14/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E8%A3%85%E5%92%8C%E8%BF%9E%E6%8E%A5/</url>
     <content><![CDATA[<h1 id="Docker数据库全家桶：MySQL、Oracle、PostgreSQL、Redis完整安装与远程连接指南"><a href="#Docker数据库全家桶：MySQL、Oracle、PostgreSQL、Redis完整安装与远程连接指南" class="headerlink" title="Docker数据库全家桶：MySQL、Oracle、PostgreSQL、Redis完整安装与远程连接指南"></a>Docker数据库全家桶：MySQL、Oracle、PostgreSQL、Redis完整安装与远程连接指南</h1><blockquote>
@@ -1939,11 +1642,308 @@
         <category>数据库</category>
       </categories>
       <tags>
-        <tag>PostgreSQL</tag>
         <tag>MySQL</tag>
         <tag>Oracle</tag>
+        <tag>PostgreSQL</tag>
         <tag>Redis</tag>
         <tag>数据库连接</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>PostgreSQL 安装、使用</title>
+    <url>/2026/05/14/PostgreSQL%20%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="PostgreSQL-安装、使用与多数据库对比教程（含练习及答案）"><a href="#PostgreSQL-安装、使用与多数据库对比教程（含练习及答案）" class="headerlink" title="PostgreSQL 安装、使用与多数据库对比教程（含练习及答案）"></a>PostgreSQL 安装、使用与多数据库对比教程（含练习及答案）</h1><p>本教程将帮助你快速上手 PostgreSQL，通过 Docker Compose 完成环境搭建，掌握常用 SQL 语法，并深入比较它与 MySQL、Oracle 的优缺点。教程最后提供课后练习及参考答案。</p>
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li><a href="#1-postgresql-简介">PostgreSQL 简介</a></li>
+<li><a href="#2-docker-compose-安装-postgresql">Docker Compose 安装 PostgreSQL</a></li>
+<li><a href="#3-postgresql-常用语法">PostgreSQL 常用语法</a></li>
+<li><a href="#4-postgresql-vs-mysql">PostgreSQL vs MySQL</a></li>
+<li><a href="#5-postgresql-vs-oracle">PostgreSQL vs Oracle</a></li>
+<li><a href="#6-课后练习">课后练习</a></li>
+<li><a href="#7-练习答案">练习答案</a></li>
+</ol>
+<hr>
+<h2 id="1-PostgreSQL-简介"><a href="#1-PostgreSQL-简介" class="headerlink" title="1. PostgreSQL 简介"></a>1. PostgreSQL 简介</h2><p>PostgreSQL 是一款功能强大的开源对象-关系型数据库系统，拥有超过 30 年的开发历史，以可靠性、数据完整性和标准兼容著称。它支持：</p>
+<ul>
+<li>丰富的数据类型（数组、JSON、范围、几何等）</li>
+<li>完整的 ACID 事务与多版本并发控制 (MVCC)</li>
+<li>函数、存储过程（多种语言）、触发器</li>
+<li>表继承、分区表、全文搜索</li>
+<li>强大的扩展能力（如 PostGIS、Citus）</li>
+</ul>
+<hr>
+<h2 id="2-Docker-Compose-安装-PostgreSQL"><a href="#2-Docker-Compose-安装-PostgreSQL" class="headerlink" title="2. Docker Compose 安装 PostgreSQL"></a>2. Docker Compose 安装 PostgreSQL</h2><h3 id="2-1-前置条件"><a href="#2-1-前置条件" class="headerlink" title="2.1 前置条件"></a>2.1 前置条件</h3><ul>
+<li>安装 Docker 及 Docker Compose（Docker Desktop 已包含）</li>
+<li>基本命令行操作知识</li>
+</ul>
+<h3 id="2-2-编写-docker-compose-yml"><a href="#2-2-编写-docker-compose-yml" class="headerlink" title="2.2 编写 docker-compose.yml"></a>2.2 编写 <code>docker-compose.yml</code></h3><p>创建一个项目目录（例如 <code>pg-tutorial</code>），在其中新建 <code>docker-compose.yml</code>：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">&#x27;3.8&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">postgres:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">postgres:16-alpine</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">pg-tutorial</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">POSTGRES_USER:</span> <span class="string">myuser</span></span><br><span class="line">      <span class="attr">POSTGRES_PASSWORD:</span> <span class="string">mypassword</span></span><br><span class="line">      <span class="attr">POSTGRES_DB:</span> <span class="string">tutorial</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;5432:5432&quot;</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">pgdata:/var/lib/postgresql/data</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">./init.sql:/docker-entrypoint-initdb.d/init.sql</span>   <span class="comment"># 可选初始化脚本</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">adminer:</span>                <span class="comment"># 轻量 Web 管理工具（可选）</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">adminer</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">pgdata:</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-3-启动与连接"><a href="#2-3-启动与连接" class="headerlink" title="2.3 启动与连接"></a>2.3 启动与连接</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在 docker-compose.yml 所在目录执行</span></span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+<p>验证服务：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it pg-tutorial psql -U myuser -d tutorial</span><br></pre></td></tr></table></figure></p>
+<p>你也可以通过 Adminer 访问：浏览器打开 <code>http://localhost:8080</code>，系统选择 PostgreSQL，服务器 <code>postgres</code>，用户名 <code>myuser</code>，密码 <code>mypassword</code>，数据库 <code>tutorial</code>。</p>
+<h3 id="2-4-基本管理命令"><a href="#2-4-基本管理命令" class="headerlink" title="2.4 基本管理命令"></a>2.4 基本管理命令</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 列出数据库</span></span><br><span class="line">\l</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 切换数据库</span></span><br><span class="line">\c tutorial</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 列出所有表</span></span><br><span class="line">\dt</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查看表结构</span></span><br><span class="line">\d table_name</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 退出</span></span><br><span class="line">\q</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="3-PostgreSQL-常用语法"><a href="#3-PostgreSQL-常用语法" class="headerlink" title="3. PostgreSQL 常用语法"></a>3. PostgreSQL 常用语法</h2><h3 id="3-1-数据类型速览"><a href="#3-1-数据类型速览" class="headerlink" title="3.1 数据类型速览"></a>3.1 数据类型速览</h3><ul>
+<li><strong>数值</strong>：<code>INTEGER</code>、<code>BIGINT</code>、<code>NUMERIC(precision, scale)</code>、<code>SERIAL</code>（自增）</li>
+<li><strong>字符</strong>：<code>VARCHAR(n)</code>、<code>CHAR(n)</code>、<code>TEXT</code></li>
+<li><strong>日期/时间</strong>：<code>DATE</code>、<code>TIME</code>、<code>TIMESTAMP</code>、<code>INTERVAL</code></li>
+<li><strong>布尔</strong>：<code>BOOLEAN</code></li>
+<li><strong>JSON</strong>：<code>JSON</code>、<code>JSONB</code>（推荐使用二进制 JSON）</li>
+<li><strong>数组</strong>：<code>INTEGER[]</code>、<code>TEXT[]</code></li>
+<li><strong>UUID</strong>：<code>UUID</code> 结合 <code>gen_random_uuid()</code> 生成</li>
+</ul>
+<h3 id="3-2-数据库与表操作"><a href="#3-2-数据库与表操作" class="headerlink" title="3.2 数据库与表操作"></a>3.2 数据库与表操作</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建数据库（在 shell 中 createdb 命令，或 SQL 超级用户下）</span></span><br><span class="line"><span class="keyword">CREATE</span> DATABASE shop;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> products (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    name <span class="type">VARCHAR</span>(<span class="number">200</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    price <span class="type">NUMERIC</span>(<span class="number">10</span>,<span class="number">2</span>) <span class="keyword">CHECK</span> (price <span class="operator">&gt;</span> <span class="number">0</span>),</span><br><span class="line">    tags TEXT[],</span><br><span class="line">    attributes JSONB,</span><br><span class="line">    created_at <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 修改表</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> products <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> stock <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除表</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> products;</span><br></pre></td></tr></table></figure>
+<h3 id="3-3-CRUD-操作"><a href="#3-3-CRUD-操作" class="headerlink" title="3.3 CRUD 操作"></a>3.3 CRUD 操作</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 插入</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> products (name, price, tags, attributes)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;Laptop&#x27;</span>, <span class="number">999.99</span>, <span class="keyword">ARRAY</span>[<span class="string">&#x27;electronics&#x27;</span>,<span class="string">&#x27;portable&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;&#123;&quot;brand&quot;:&quot;TechBrand&quot;, &quot;color&quot;:&quot;silver&quot;&#125;&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 查询</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> price <span class="operator">&lt;</span> <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 更新</span></span><br><span class="line"><span class="keyword">UPDATE</span> products <span class="keyword">SET</span> price <span class="operator">=</span> <span class="number">949.99</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> <span class="string">&#x27;Laptop&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除</span></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="3-4-高级查询"><a href="#3-4-高级查询" class="headerlink" title="3.4 高级查询"></a>3.4 高级查询</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- JOIN 示例（假设有 categories 表）</span></span><br><span class="line"><span class="keyword">SELECT</span> p.name, c.category_name</span><br><span class="line"><span class="keyword">FROM</span> products p</span><br><span class="line"><span class="keyword">JOIN</span> categories c <span class="keyword">ON</span> p.category_id <span class="operator">=</span> c.id;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 子查询</span></span><br><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> price <span class="operator">&gt;</span> (<span class="keyword">SELECT</span> <span class="built_in">AVG</span>(price) <span class="keyword">FROM</span> products);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 窗口函数（排名）</span></span><br><span class="line"><span class="keyword">SELECT</span> name, price,</span><br><span class="line">       <span class="built_in">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">ORDER</span> <span class="keyword">BY</span> price <span class="keyword">DESC</span>) <span class="keyword">AS</span> price_rank</span><br><span class="line"><span class="keyword">FROM</span> products;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- JSONB 操作</span></span><br><span class="line"><span class="keyword">SELECT</span> name, attributes<span class="operator">-</span><span class="operator">&gt;&gt;</span><span class="string">&#x27;brand&#x27;</span> <span class="keyword">AS</span> brand</span><br><span class="line"><span class="keyword">FROM</span> products</span><br><span class="line"><span class="keyword">WHERE</span> attributes @<span class="operator">&gt;</span> <span class="string">&#x27;&#123;&quot;color&quot;:&quot;silver&quot;&#125;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 数组操作</span></span><br><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> <span class="string">&#x27;electronics&#x27;</span> <span class="operator">=</span> <span class="keyword">ANY</span>(tags);</span><br></pre></td></tr></table></figure>
+<h3 id="3-5-索引"><a href="#3-5-索引" class="headerlink" title="3.5 索引"></a>3.5 索引</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- B-tree 索引</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_products_price <span class="keyword">ON</span> products(price);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 唯一索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX idx_products_name <span class="keyword">ON</span> products(name);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- GIN 索引用于 JSONB 和数组</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_products_attributes <span class="keyword">ON</span> products <span class="keyword">USING</span> GIN(attributes);</span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_products_tags <span class="keyword">ON</span> products <span class="keyword">USING</span> GIN(tags);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 部分索引</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_products_stock_low <span class="keyword">ON</span> products(stock) <span class="keyword">WHERE</span> stock <span class="operator">&lt;</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="3-6-事务与并发控制"><a href="#3-6-事务与并发控制" class="headerlink" title="3.6 事务与并发控制"></a>3.6 事务与并发控制</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> products <span class="keyword">SET</span> stock <span class="operator">=</span> stock <span class="operator">-</span> <span class="number">1</span> <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span> <span class="keyword">AND</span> stock <span class="operator">&gt;</span> <span class="number">0</span>;</span><br><span class="line"><span class="comment">-- 检查影响行数，若为0则回滚</span></span><br><span class="line"><span class="keyword">COMMIT</span>; <span class="comment">-- 或 ROLLBACK;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 设置事务隔离级别</span></span><br><span class="line"><span class="keyword">BEGIN</span> ISOLATION LEVEL SERIALIZABLE;</span><br><span class="line"><span class="comment">-- ...</span></span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+<p>PostgreSQL 默认为 READ COMMITTED 隔离级别，MVCC 保证读不阻塞写。</p>
+<h3 id="3-7-视图、函数与存储过程"><a href="#3-7-视图、函数与存储过程" class="headerlink" title="3.7 视图、函数与存储过程"></a>3.7 视图、函数与存储过程</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 视图</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> product_summary <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> name, price, stock <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> stock <span class="operator">&gt;</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- SQL 函数</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> get_discounted_price(prod_id <span class="type">INT</span>, discount <span class="type">NUMERIC</span>)</span><br><span class="line"><span class="keyword">RETURNS</span> <span class="type">NUMERIC</span> <span class="keyword">AS</span> $$</span><br><span class="line">  <span class="keyword">SELECT</span> price <span class="operator">*</span> (<span class="number">1</span> <span class="operator">-</span> discount) <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> id <span class="operator">=</span> prod_id;</span><br><span class="line">$$ <span class="keyword">LANGUAGE</span> <span class="keyword">SQL</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- PL/pgSQL 函数</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">FUNCTION</span> update_stock(prod_id <span class="type">INT</span>, qty <span class="type">INT</span>) <span class="keyword">RETURNS</span> VOID <span class="keyword">AS</span> $$</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">  <span class="keyword">UPDATE</span> products <span class="keyword">SET</span> stock <span class="operator">=</span> stock <span class="operator">+</span> qty <span class="keyword">WHERE</span> id <span class="operator">=</span> prod_id;</span><br><span class="line">  IF <span class="keyword">NOT</span> FOUND <span class="keyword">THEN</span></span><br><span class="line">    RAISE EXCEPTION <span class="string">&#x27;Product not found&#x27;</span>;</span><br><span class="line">  <span class="keyword">END</span> IF;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line">$$ <span class="keyword">LANGUAGE</span> plpgsql;</span><br></pre></td></tr></table></figure>
+<h3 id="3-8-表分区"><a href="#3-8-表分区" class="headerlink" title="3.8 表分区"></a>3.8 表分区</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建范围分区表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders (</span><br><span class="line">    id SERIAL,</span><br><span class="line">    order_date <span class="type">DATE</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    amount <span class="type">NUMERIC</span></span><br><span class="line">) <span class="keyword">PARTITION</span> <span class="keyword">BY</span> <span class="keyword">RANGE</span> (order_date);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建分区</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders_2024 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> orders</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2024-01-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2025-01-01&#x27;</span>);</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders_2025 <span class="keyword">PARTITION</span> <span class="keyword">OF</span> orders</span><br><span class="line">    <span class="keyword">FOR</span> <span class="keyword">VALUES</span> <span class="keyword">FROM</span> (<span class="string">&#x27;2025-01-01&#x27;</span>) <span class="keyword">TO</span> (<span class="string">&#x27;2026-01-01&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="4-PostgreSQL-vs-MySQL"><a href="#4-PostgreSQL-vs-MySQL" class="headerlink" title="4. PostgreSQL vs MySQL"></a>4. PostgreSQL vs MySQL</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>PostgreSQL</th>
+<th>MySQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SQL 标准兼容</strong></td>
+<td>高度兼容，支持窗口函数、CTE、CHECK约束等</td>
+<td>部分兼容，早期版本缺窗口函数等，8.0后改进</td>
+</tr>
+<tr>
+<td><strong>数据类型</strong></td>
+<td>丰富：数组、JSONB、UUID、范围、几何等</td>
+<td>支持 JSON，但不支持数组列；数据类型较简单</td>
+</tr>
+<tr>
+<td><strong>自增主键</strong></td>
+<td><code>SERIAL</code> / <code>IDENTITY</code> 列</td>
+<td><code>AUTO_INCREMENT</code></td>
+</tr>
+<tr>
+<td><strong>存储引擎</strong></td>
+<td>单一引擎，MVCC 全引擎支持</td>
+<td>多种引擎（InnoDB, MyISAM），InnoDB 为主要事务性引擎</td>
+</tr>
+<tr>
+<td><strong>事务隔离</strong></td>
+<td>支持完整的隔离级别，默认 Read Committed</td>
+<td>支持（InnoDB），默认可重复读</td>
+</tr>
+<tr>
+<td><strong>复制与集群</strong></td>
+<td>流复制、逻辑复制、Citus 分布式；需要扩展实现读写分离</td>
+<td>异步/半同步复制，MySQL Group Replication，InnoDB Cluster</td>
+</tr>
+<tr>
+<td><strong>全文搜索</strong></td>
+<td>内置强大全文搜索（<code>tsvector</code>）</td>
+<td>内置但功能较弱（InnoDB 全文索引）</td>
+</tr>
+<tr>
+<td><strong>JSON 支持</strong></td>
+<td>JSONB（二进制，可索引）性能优异</td>
+<td>JSON 函数和生成列索引，较方便但深度不如 JSONB</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>复杂查询、分析查询优势；写并发可能稍弱</td>
+<td>简单读写、高并发 OLTP 表现优秀</td>
+</tr>
+<tr>
+<td><strong>扩展性</strong></td>
+<td>扩展生态极强（PostGIS, Citus, TimescaleDB）</td>
+<td>插件式存储引擎，但功能扩展不如 PG 灵活</td>
+</tr>
+<tr>
+<td><strong>易用性</strong></td>
+<td>初期学习曲线稍高，管理相对复杂</td>
+<td>易安装配置，社区生态大，新手友好</td>
+</tr>
+<tr>
+<td><strong>优点</strong></td>
+<td>数据完整性严格，功能丰富，扩展强，适合复杂业务</td>
+<td>简单快捷，流行度高，高并发读写性能好</td>
+</tr>
+<tr>
+<td><strong>缺点</strong></td>
+<td>内存消耗较大，复制配置稍复杂，插件过多需甄别</td>
+<td>标准兼容弱，严格约束默认不开启（如SQL_MODE）</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>复杂查询、地理信息、金融、数据分析、需要高级数据类型</td>
+<td>Web应用、SaaS、标准化 LAMP/LEMP 架构</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="5-PostgreSQL-vs-Oracle"><a href="#5-PostgreSQL-vs-Oracle" class="headerlink" title="5. PostgreSQL vs Oracle"></a>5. PostgreSQL vs Oracle</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>PostgreSQL</th>
+<th>Oracle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>许可证</strong></td>
+<td>开源 (MIT/PostgreSQL 许可)，免费</td>
+<td>商业专有，许可证费用极高</td>
+</tr>
+<tr>
+<td><strong>SQL 语法</strong></td>
+<td>遵循 SQL 标准，PL/pgSQL 类似 PL/SQL</td>
+<td>PL/SQL 功能强大，语法略有不同</td>
+</tr>
+<tr>
+<td><strong>高级特性</strong></td>
+<td>分区表、物化视图、并行查询、JIT 编译、逻辑复制</td>
+<td>分区、物化视图、RAC、Data Guard、高级队列、闪回</td>
+</tr>
+<tr>
+<td><strong>并发控制</strong></td>
+<td>MVCC，无回滚段，需要 VACUUM 清理</td>
+<td>回滚段 + MVCC，读一致性优秀，但可能 ORA-01555</td>
+</tr>
+<tr>
+<td><strong>性能优化</strong></td>
+<td>基于统计的优化器，需要手动调参和索引</td>
+<td>成熟的优化器和自动调优（AWR, ADDM）</td>
+</tr>
+<tr>
+<td><strong>高可用</strong></td>
+<td>流复制、Patroni 自动化切换</td>
+<td>Data Guard (物理/逻辑), RAC（共享磁盘集群）</td>
+</tr>
+<tr>
+<td><strong>管理工具</strong></td>
+<td>pgAdmin, psql, DBeaver 等</td>
+<td>Oracle Enterprise Manager, SQL*Plus, SQL Developer</td>
+</tr>
+<tr>
+<td><strong>运维成本</strong></td>
+<td>开源，免费社区支持或商业支持（EDB, Crunchy）</td>
+<td>需购买许可，DBA 成本高</td>
+</tr>
+<tr>
+<td><strong>迁移难度</strong></td>
+<td>从 Oracle 迁移需注意 PL/SQL 差异，工具 ora2pg</td>
+<td>锁定客户，迁移困难</td>
+</tr>
+<tr>
+<td><strong>优点</strong></td>
+<td>零成本，活跃社区，持续创新，可与各种平台集成</td>
+<td>企业级最成熟，商业支持强，适合超大型混合负载</td>
+</tr>
+<tr>
+<td><strong>缺点</strong></td>
+<td>管理不如 Oracle 自动化，某些企业审计功能需插件</td>
+<td>成本过高，厂商锁定，闭源</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>中大型企业，预算敏感，需要现代数据库功能</td>
+<td>财力雄厚的超大型企业、政府，以及要求 Oracle 特定生态</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>对比总结</strong>：PostgreSQL 在功能上已能与 Oracle 一较高下，且在开源生态上占有巨大优势。对于大多数新项目，如果无需 Oracle 独有的 RAC 集群、高级队列或特定法规认证，PostgreSQL 完全可胜任，且能节省大量许可费用。</p>
+<hr>
+<h2 id="6-课后练习"><a href="#6-课后练习" class="headerlink" title="6. 课后练习"></a>6. 课后练习</h2><p>请使用之前搭建的 Docker Compose PostgreSQL 环境完成以下练习。所有 SQL 语句需在 <code>tutorial</code> 数据库内执行。</p>
+<h3 id="练习1：环境与基础建表"><a href="#练习1：环境与基础建表" class="headerlink" title="练习1：环境与基础建表"></a>练习1：环境与基础建表</h3><ol>
+<li>使用 <code>psql</code> 或 Adminer 连接到 PostgreSQL 容器。</li>
+<li>创建表 <code>authors</code>：<ul>
+<li><code>id</code>：主键，自增整数</li>
+<li><code>name</code>：文本，非空</li>
+<li><code>bio</code>：文本，允许为空</li>
+</ul>
+</li>
+<li>创建表 <code>books</code>：<ul>
+<li><code>id</code>：主键，自增整数</li>
+<li><code>title</code>：变长字符串（最长300），非空</li>
+<li><code>author_id</code>：整数，引用 <code>authors(id)</code>，外键</li>
+<li><code>genre</code>：文本数组</li>
+<li><code>published_date</code>：日期</li>
+<li><code>metadata</code>：JSONB 类型（存放评分、页数等）</li>
+<li><code>price</code>：numeric(8,2)，必须大于0</li>
+</ul>
+</li>
+<li>在 <code>books.title</code> 上创建唯一索引，在 <code>books.metadata</code> 上创建 GIN 索引。</li>
+</ol>
+<h3 id="练习2：数据操作与查询"><a href="#练习2：数据操作与查询" class="headerlink" title="练习2：数据操作与查询"></a>练习2：数据操作与查询</h3><ol>
+<li>向 <code>authors</code> 表中至少插入3位作者。</li>
+<li>向 <code>books</code> 表插入至少5本书，确保使用数组字段和 JSONB 字段。例如：<ul>
+<li><code>genre</code> 包含 <code>&#123;&#39;fiction&#39;, &#39;adventure&#39;&#125;</code>，<code>metadata</code> 包含 <code>&#123;&quot;rating&quot;: 9.2, &quot;pages&quot;: 320&#125;</code>。</li>
+</ul>
+</li>
+<li>写一条 SELECT 查询，列出所有书籍及其作者姓名。</li>
+<li>写一条查询，找出所有 <code>genre</code> 数组中含有 <code>fiction</code> 的书籍。</li>
+<li>写一条查询，从 <code>metadata</code> 中提取 <code>rating</code>，筛选评分大于 8.5 的书籍。</li>
+<li>写一条使用窗口函数的查询，按价格降序排名，列出书名、价格和排名。</li>
+</ol>
+<h3 id="练习3：索引与性能"><a href="#练习3：索引与性能" class="headerlink" title="练习3：索引与性能"></a>练习3：索引与性能</h3><ol>
+<li>使用 <code>EXPLAIN</code> 分析前一个查询（按价格排序并排名）的执行计划。</li>
+<li>假设有一张巨大的 <code>books</code> 表，经常需要按 <code>published_date</code> 范围查询，请写出对应的索引创建语句。</li>
+<li>创建一个部分索引，仅索引价格大于 100 的书籍。</li>
+</ol>
+<h3 id="练习4：事务与并发"><a href="#练习4：事务与并发" class="headerlink" title="练习4：事务与并发"></a>练习4：事务与并发</h3><ol>
+<li>编写一个事务：先添加一本新书，然后更新对应作者的 <code>bio</code> 字段（如果为空则设置一个默认介绍）。若任何一步失败，全部回滚。</li>
+<li>开启两个并行会话 (<code>psql</code>)，模拟并发场景：其中一个会话减少某本书的价格20%，在提交前让另一个会话读取。记录读取到的值，验证默认隔离级别下的行为。</li>
+</ol>
+<h3 id="练习5：综合小型项目"><a href="#练习5：综合小型项目" class="headerlink" title="练习5：综合小型项目"></a>练习5：综合小型项目</h3><p>设计一个简单的“订单系统”：</p>
+<ul>
+<li>表 <code>customers</code>：id, name, email（唯一）</li>
+<li>表 <code>orders</code>：id, customer_id, order_date, total_amount</li>
+<li>表 <code>order_items</code>：id, order_id, book_id, quantity</li>
+</ul>
+<ol>
+<li>写出对应的 CREATE TABLE 语句，确保外键关系和合适的数据类型。</li>
+<li>插入一些示例数据。</li>
+<li>写一个查询：列出每个客户的姓名、邮箱以及他们下过的订单总数。</li>
+<li>写一个视图 <code>order_detail_view</code>，包含订单号、客户姓名、书名、数量、单价、小计（price*quantity）。</li>
+<li>写一个函数 <code>place_order</code>，接收客户 ID，一个包含 <code>book_id</code> 和 <code>quantity</code> 的数组（可以使用 JSON 数组），在单个事务内创建订单和订单项，并更新书籍库存（注意：在 books 表上加 stock 列，默认10）。函数应返回新订单的 ID。</li>
+</ol>
+<hr>
+<h2 id="7-练习答案"><a href="#7-练习答案" class="headerlink" title="7. 练习答案"></a>7. 练习答案</h2><h3 id="练习1-答案"><a href="#练习1-答案" class="headerlink" title="练习1 答案"></a>练习1 答案</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 连接 (略)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 创建 authors 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> authors (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    name TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    bio TEXT</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 创建 books 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> books (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    title <span class="type">VARCHAR</span>(<span class="number">300</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    author_id <span class="type">INT</span> <span class="keyword">REFERENCES</span> authors(id),</span><br><span class="line">    genre TEXT[],</span><br><span class="line">    published_date <span class="type">DATE</span>,</span><br><span class="line">    metadata JSONB,</span><br><span class="line">    price <span class="type">NUMERIC</span>(<span class="number">8</span>,<span class="number">2</span>) <span class="keyword">CHECK</span> (price <span class="operator">&gt;</span> <span class="number">0</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 4. 创建索引</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX idx_books_title <span class="keyword">ON</span> books(title);</span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_books_metadata <span class="keyword">ON</span> books <span class="keyword">USING</span> GIN(metadata);</span><br></pre></td></tr></table></figure>
+<h3 id="练习2-答案"><a href="#练习2-答案" class="headerlink" title="练习2 答案"></a>练习2 答案</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 插入作者</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> authors (name, bio) <span class="keyword">VALUES</span></span><br><span class="line">(<span class="string">&#x27;J.K. Rowling&#x27;</span>, <span class="string">&#x27;British author, best known for Harry Potter.&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;George R.R. Martin&#x27;</span>, <span class="string">&#x27;Author of A Song of Ice and Fire.&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;J.R.R. Tolkien&#x27;</span>, <span class="string">&#x27;Writer of The Lord of the Rings.&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 插入书籍</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> books (title, author_id, genre, published_date, metadata, price)</span><br><span class="line"><span class="keyword">VALUES</span></span><br><span class="line">(<span class="string">&#x27;Harry Potter and the Philosopher&#x27;&#x27;s Stone&#x27;</span>, <span class="number">1</span>,</span><br><span class="line"> <span class="keyword">ARRAY</span>[<span class="string">&#x27;fantasy&#x27;</span>,<span class="string">&#x27;fiction&#x27;</span>], <span class="string">&#x27;1997-06-26&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#123;&quot;rating&quot;: 9.1, &quot;pages&quot;: 309&#125;&#x27;</span>, <span class="number">19.99</span>),</span><br><span class="line">(<span class="string">&#x27;A Game of Thrones&#x27;</span>, <span class="number">2</span>,</span><br><span class="line"> <span class="keyword">ARRAY</span>[<span class="string">&#x27;fantasy&#x27;</span>,<span class="string">&#x27;fiction&#x27;</span>,<span class="string">&#x27;political&#x27;</span>], <span class="string">&#x27;1996-08-01&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#123;&quot;rating&quot;: 9.3, &quot;pages&quot;: 694&#125;&#x27;</span>, <span class="number">24.95</span>),</span><br><span class="line">(<span class="string">&#x27;The Hobbit&#x27;</span>, <span class="number">3</span>,</span><br><span class="line"> <span class="keyword">ARRAY</span>[<span class="string">&#x27;fantasy&#x27;</span>,<span class="string">&#x27;adventure&#x27;</span>], <span class="string">&#x27;1937-09-21&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#123;&quot;rating&quot;: 9.0, &quot;pages&quot;: 310&#125;&#x27;</span>, <span class="number">14.99</span>),</span><br><span class="line">(<span class="string">&#x27;The Fellowship of the Ring&#x27;</span>, <span class="number">3</span>,</span><br><span class="line"> <span class="keyword">ARRAY</span>[<span class="string">&#x27;fantasy&#x27;</span>,<span class="string">&#x27;epic&#x27;</span>], <span class="string">&#x27;1954-07-29&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#123;&quot;rating&quot;: 9.4, &quot;pages&quot;: 423&#125;&#x27;</span>, <span class="number">17.50</span>),</span><br><span class="line">(<span class="string">&#x27;A Clash of Kings&#x27;</span>, <span class="number">2</span>,</span><br><span class="line"> <span class="keyword">ARRAY</span>[<span class="string">&#x27;fantasy&#x27;</span>,<span class="string">&#x27;fiction&#x27;</span>,<span class="string">&#x27;political&#x27;</span>], <span class="string">&#x27;1998-11-16&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#123;&quot;rating&quot;: 9.2, &quot;pages&quot;: 768&#125;&#x27;</span>, <span class="number">22.00</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 书籍与作者姓名</span></span><br><span class="line"><span class="keyword">SELECT</span> b.title, a.name <span class="keyword">AS</span> author</span><br><span class="line"><span class="keyword">FROM</span> books b</span><br><span class="line"><span class="keyword">JOIN</span> authors a <span class="keyword">ON</span> b.author_id <span class="operator">=</span> a.id;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 4. 包含 fiction 的书籍</span></span><br><span class="line"><span class="keyword">SELECT</span> title <span class="keyword">FROM</span> books <span class="keyword">WHERE</span> <span class="string">&#x27;fiction&#x27;</span> <span class="operator">=</span> <span class="keyword">ANY</span>(genre);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 5. 评分大于 8.5</span></span><br><span class="line"><span class="keyword">SELECT</span> title, metadata<span class="operator">-</span><span class="operator">&gt;&gt;</span><span class="string">&#x27;rating&#x27;</span> <span class="keyword">AS</span> rating</span><br><span class="line"><span class="keyword">FROM</span> books</span><br><span class="line"><span class="keyword">WHERE</span> (metadata<span class="operator">-</span><span class="operator">&gt;&gt;</span><span class="string">&#x27;rating&#x27;</span>)::<span class="type">numeric</span> <span class="operator">&gt;</span> <span class="number">8.5</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 6. 价格排名</span></span><br><span class="line"><span class="keyword">SELECT</span> title, price,</span><br><span class="line">       <span class="built_in">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">ORDER</span> <span class="keyword">BY</span> price <span class="keyword">DESC</span>) <span class="keyword">AS</span> price_rank</span><br><span class="line"><span class="keyword">FROM</span> books;</span><br></pre></td></tr></table></figure>
+<h3 id="练习3-答案"><a href="#练习3-答案" class="headerlink" title="练习3 答案"></a>练习3 答案</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 分析查询</span></span><br><span class="line">EXPLAIN ANALYZE</span><br><span class="line"><span class="keyword">SELECT</span> title, price, <span class="built_in">RANK</span>() <span class="keyword">OVER</span> (<span class="keyword">ORDER</span> <span class="keyword">BY</span> price <span class="keyword">DESC</span>)</span><br><span class="line"><span class="keyword">FROM</span> books;</span><br><span class="line"><span class="comment">-- 观察执行计划，注意 Sort 操作和索引使用情况。</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 日期范围查询索引</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_books_published_date <span class="keyword">ON</span> books(published_date);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 部分索引</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_books_high_price <span class="keyword">ON</span> books(price) <span class="keyword">WHERE</span> price <span class="operator">&gt;</span> <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="练习4-答案"><a href="#练习4-答案" class="headerlink" title="练习4 答案"></a>练习4 答案</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 事务操作</span></span><br><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> books (title, author_id, genre, published_date, metadata, price)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;New Book&#x27;</span>, <span class="number">1</span>, <span class="keyword">ARRAY</span>[<span class="string">&#x27;test&#x27;</span>], <span class="built_in">CURRENT_DATE</span>, <span class="string">&#x27;&#123;&#125;&#x27;</span>, <span class="number">10.00</span>);</span><br><span class="line"><span class="keyword">UPDATE</span> authors <span class="keyword">SET</span> bio <span class="operator">=</span> <span class="built_in">COALESCE</span>(bio, <span class="string">&#x27;Default bio&#x27;</span>) <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>并发模拟：</li>
+</ol>
+<ul>
+<li>会话1：<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">BEGIN</span>;</span><br><span class="line"><span class="keyword">UPDATE</span> books <span class="keyword">SET</span> price <span class="operator">=</span> price <span class="operator">*</span> <span class="number">0.8</span> <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="comment">-- 不提交</span></span><br></pre></td></tr></table></figure></li>
+<li>会话2：<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> price <span class="keyword">FROM</span> books <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="comment">-- 默认 READ COMMITTED 下，会话2读到的是更新前的原始价格，因为会话1未提交。</span></span><br></pre></td></tr></table></figure></li>
+<li>会话1 <code>COMMIT</code> 后，会话2再次查询将看到新价格。</li>
+</ul>
+<h3 id="练习5-答案"><a href="#练习5-答案" class="headerlink" title="练习5 答案"></a>练习5 答案</h3><figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 1. 添加 stock 列到 books（若无则加）</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> books <span class="keyword">ADD</span> <span class="keyword">COLUMN</span> stock <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建 customers 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> customers (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    name TEXT <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    email TEXT <span class="keyword">UNIQUE</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建 orders 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    customer_id <span class="type">INT</span> <span class="keyword">REFERENCES</span> customers(id),</span><br><span class="line">    order_date <span class="type">DATE</span> <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_DATE</span>,</span><br><span class="line">    total_amount <span class="type">NUMERIC</span>(<span class="number">10</span>,<span class="number">2</span>) <span class="keyword">DEFAULT</span> <span class="number">0</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建 order_items 表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> order_items (</span><br><span class="line">    id SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    order_id <span class="type">INT</span> <span class="keyword">REFERENCES</span> orders(id),</span><br><span class="line">    book_id <span class="type">INT</span> <span class="keyword">REFERENCES</span> books(id),</span><br><span class="line">    quantity <span class="type">INT</span> <span class="keyword">CHECK</span> (quantity <span class="operator">&gt;</span> <span class="number">0</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 2. 插入示例数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> customers (name, email) <span class="keyword">VALUES</span></span><br><span class="line">(<span class="string">&#x27;Alice Smith&#x27;</span>, <span class="string">&#x27;alice@example.com&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;Bob Jones&#x27;</span>, <span class="string">&#x27;bob@example.com&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 3. 客户订单总数</span></span><br><span class="line"><span class="keyword">SELECT</span> c.name, c.email, <span class="built_in">COUNT</span>(o.id) <span class="keyword">AS</span> order_count</span><br><span class="line"><span class="keyword">FROM</span> customers c</span><br><span class="line"><span class="keyword">LEFT</span> <span class="keyword">JOIN</span> orders o <span class="keyword">ON</span> c.id <span class="operator">=</span> o.customer_id</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> c.id;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 4. 视图</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> order_detail_view <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> o.id <span class="keyword">AS</span> order_id, c.name <span class="keyword">AS</span> customer_name, b.title <span class="keyword">AS</span> book_title,</span><br><span class="line">       oi.quantity, b.price <span class="keyword">AS</span> unit_price,</span><br><span class="line">       (oi.quantity <span class="operator">*</span> b.price) <span class="keyword">AS</span> subtotal</span><br><span class="line"><span class="keyword">FROM</span> orders o</span><br><span class="line"><span class="keyword">JOIN</span> customers c <span class="keyword">ON</span> o.customer_id <span class="operator">=</span> c.id</span><br><span class="line"><span class="keyword">JOIN</span> order_items oi <span class="keyword">ON</span> o.id <span class="operator">=</span> oi.order_id</span><br><span class="line"><span class="keyword">JOIN</span> books b <span class="keyword">ON</span> oi.book_id <span class="operator">=</span> b.id;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 5. 创建下订单函数（使用JSON数组）</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">OR</span> REPLACE <span class="keyword">FUNCTION</span> place_order(</span><br><span class="line">    cust_id <span class="type">INT</span>,</span><br><span class="line">    items_json JSONB   <span class="comment">-- 格式: [&#123;&quot;book_id&quot;: 1, &quot;quantity&quot;: 2&#125;, ...]</span></span><br><span class="line">) <span class="keyword">RETURNS</span> <span class="type">INT</span> <span class="keyword">AS</span> $$</span><br><span class="line"><span class="keyword">DECLARE</span></span><br><span class="line">    new_order_id <span class="type">INT</span>;</span><br><span class="line">    item RECORD;</span><br><span class="line">    total <span class="type">NUMERIC</span>(<span class="number">10</span>,<span class="number">2</span>) :<span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    book_price <span class="type">NUMERIC</span>;</span><br><span class="line">    book_stock <span class="type">INT</span>;</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="comment">-- 创建订单</span></span><br><span class="line">    <span class="keyword">INSERT</span> <span class="keyword">INTO</span> orders (customer_id) <span class="keyword">VALUES</span> (cust_id) RETURNING id <span class="keyword">INTO</span> new_order_id;</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 遍历购物车项</span></span><br><span class="line">    <span class="keyword">FOR</span> item <span class="keyword">IN</span> <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> jsonb_to_recordset(items_json) <span class="keyword">AS</span> x(book_id <span class="type">INT</span>, quantity <span class="type">INT</span>)</span><br><span class="line">    LOOP</span><br><span class="line">        <span class="comment">-- 查询书籍价格和库存（加锁防止超卖）</span></span><br><span class="line">        <span class="keyword">SELECT</span> price, stock <span class="keyword">INTO</span> book_price, book_stock</span><br><span class="line">        <span class="keyword">FROM</span> books <span class="keyword">WHERE</span> id <span class="operator">=</span> item.book_id <span class="keyword">FOR</span> <span class="keyword">UPDATE</span>;</span><br><span class="line"></span><br><span class="line">        IF <span class="keyword">NOT</span> FOUND <span class="keyword">THEN</span></span><br><span class="line">            RAISE EXCEPTION <span class="string">&#x27;Book % not found&#x27;</span>, item.book_id;</span><br><span class="line">        <span class="keyword">END</span> IF;</span><br><span class="line"></span><br><span class="line">        IF book_stock <span class="operator">&lt;</span> item.quantity <span class="keyword">THEN</span></span><br><span class="line">            RAISE EXCEPTION <span class="string">&#x27;Not enough stock for book %&#x27;</span>, item.book_id;</span><br><span class="line">        <span class="keyword">END</span> IF;</span><br><span class="line"></span><br><span class="line">        <span class="comment">-- 插入订单项</span></span><br><span class="line">        <span class="keyword">INSERT</span> <span class="keyword">INTO</span> order_items (order_id, book_id, quantity)</span><br><span class="line">        <span class="keyword">VALUES</span> (new_order_id, item.book_id, item.quantity);</span><br><span class="line"></span><br><span class="line">        <span class="comment">-- 更新库存</span></span><br><span class="line">        <span class="keyword">UPDATE</span> books <span class="keyword">SET</span> stock <span class="operator">=</span> stock <span class="operator">-</span> item.quantity <span class="keyword">WHERE</span> id <span class="operator">=</span> item.book_id;</span><br><span class="line"></span><br><span class="line">        total :<span class="operator">=</span> total <span class="operator">+</span> (book_price <span class="operator">*</span> item.quantity);</span><br><span class="line">    <span class="keyword">END</span> LOOP;</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 更新订单总金额</span></span><br><span class="line">    <span class="keyword">UPDATE</span> orders <span class="keyword">SET</span> total_amount <span class="operator">=</span> total <span class="keyword">WHERE</span> id <span class="operator">=</span> new_order_id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">RETURN</span> new_order_id;</span><br><span class="line"><span class="keyword">END</span>;</span><br><span class="line">$$ <span class="keyword">LANGUAGE</span> plpgsql;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 调用示例：</span></span><br><span class="line"><span class="keyword">SELECT</span> place_order(<span class="number">1</span>, <span class="string">&#x27;[&#123;&quot;book_id&quot;: 1, &quot;quantity&quot;: 2&#125;, &#123;&quot;book_id&quot;: 3, &quot;quantity&quot;: 1&#125;]&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="学习建议"><a href="#学习建议" class="headerlink" title="学习建议"></a>学习建议</h2><ul>
+<li>亲手敲打每个 SQL 语句，多使用 <code>EXPLAIN</code> 观察查询计划。</li>
+<li>尝试将 MySQL 或 Oracle 中的个人项目迁移到 PostgreSQL，体会差异。</li>
+<li>深入学习官方文档和高级主题（复制、监控、性能优化）。</li>
+</ul>
+<p>祝学习顺利，PostgreSQL 之旅愉快！</p>
+]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>PostgreSQL</tag>
+        <tag>PostgreSQL 命令</tag>
+        <tag>Docker安装</tag>
       </tags>
   </entry>
   <entry>
