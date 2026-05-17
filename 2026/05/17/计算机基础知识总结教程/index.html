@@ -1,0 +1,1090 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>计算机基础知识总结教程 | skying123的博客</title><meta name="author" content="skying123"><meta name="copyright" content="skying123"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="计算机基础知识总结教程 精炼版教程，覆盖计算机科学核心入门领域，适合快速查阅与系统复习。   目录 计算机概述 硬件基础 软件基础 操作系统 数据表示 计算机网络 编程与算法 数据库基础 计算机安全   一、计算机概述1.1 定义计算机是按照程序自动、高速处理数据的智能电子设备，由硬件系统和软件系统组成。 1.2 发展阶段    代际 时间 电子器件 特点     第一代 1946-1958 电子">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机基础知识总结教程">
+<meta property="og:url" content="https://skying123.github.io/2026/05/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%E6%95%99%E7%A8%8B/index.html">
+<meta property="og:site_name" content="skying123的博客">
+<meta property="og:description" content="计算机基础知识总结教程 精炼版教程，覆盖计算机科学核心入门领域，适合快速查阅与系统复习。   目录 计算机概述 硬件基础 软件基础 操作系统 数据表示 计算机网络 编程与算法 数据库基础 计算机安全   一、计算机概述1.1 定义计算机是按照程序自动、高速处理数据的智能电子设备，由硬件系统和软件系统组成。 1.2 发展阶段    代际 时间 电子器件 特点     第一代 1946-1958 电子">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://skying123.github.io/img/post.jpg">
+<meta property="article:published_time" content="2026-05-17T09:35:00.000Z">
+<meta property="article:modified_time" content="2026-05-17T11:35:35.177Z">
+<meta property="article:author" content="skying123">
+<meta property="article:tag" content="计算机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://skying123.github.io/img/post.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://skying123.github.io/2026/05/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%E6%95%99%E7%A8%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.12.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":730,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '计算机基础知识总结教程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-05-17 19:35:35'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/source/css/myStyle.css"><meta name="generator" content="Hexo 7.0.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/post.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="skying123的博客"><span class="site-name">skying123的博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">计算机基础知识总结教程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-17T09:35:00.000Z" title="发表于 2026-05-17 17:35:00">2026-05-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-17T11:35:35.177Z" title="更新于 2026-05-17 19:35:35">2026-05-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="计算机基础知识总结教程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="计算机基础知识总结教程"><a href="#计算机基础知识总结教程" class="headerlink" title="计算机基础知识总结教程"></a>计算机基础知识总结教程</h1><blockquote>
+<p>精炼版教程，覆盖计算机科学核心入门领域，适合快速查阅与系统复习。</p>
+</blockquote>
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li><a href="#一计算机概述">计算机概述</a></li>
+<li><a href="#二硬件基础">硬件基础</a></li>
+<li><a href="#三软件基础">软件基础</a></li>
+<li><a href="#四操作系统">操作系统</a></li>
+<li><a href="#五数据表示">数据表示</a></li>
+<li><a href="#六计算机网络">计算机网络</a></li>
+<li><a href="#七编程与算法">编程与算法</a></li>
+<li><a href="#八数据库基础">数据库基础</a></li>
+<li><a href="#九计算机安全">计算机安全</a></li>
+</ol>
+<hr>
+<h2 id="一、计算机概述"><a href="#一、计算机概述" class="headerlink" title="一、计算机概述"></a>一、计算机概述</h2><h3 id="1-1-定义"><a href="#1-1-定义" class="headerlink" title="1.1 定义"></a>1.1 定义</h3><p>计算机是按照程序自动、高速处理数据的智能电子设备，由<strong>硬件系统</strong>和<strong>软件系统</strong>组成。</p>
+<h3 id="1-2-发展阶段"><a href="#1-2-发展阶段" class="headerlink" title="1.2 发展阶段"></a>1.2 发展阶段</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>代际</th>
+<th>时间</th>
+<th>电子器件</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第一代</td>
+<td>1946-1958</td>
+<td>电子管</td>
+<td>体积大、耗电多</td>
+</tr>
+<tr>
+<td>第二代</td>
+<td>1958-1964</td>
+<td>晶体管</td>
+<td>体积缩小、可靠性提高</td>
+</tr>
+<tr>
+<td>第三代</td>
+<td>1964-1971</td>
+<td>集成电路</td>
+<td>小型化、成本降低</td>
+</tr>
+<tr>
+<td>第四代</td>
+<td>1971-至今</td>
+<td>大规模/超大规模集成电路</td>
+<td>微型化、网络化、智能化</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="1-3-分类"><a href="#1-3-分类" class="headerlink" title="1.3 分类"></a>1.3 分类</h3><ul>
+<li><strong>超级计算机</strong>：科学计算、气象预报</li>
+<li><strong>大型机</strong>：银行、政府核心业务</li>
+<li><strong>小型机</strong>：中型企业服务器</li>
+<li><strong>微型机</strong>：个人电脑（PC）、笔记本</li>
+<li><strong>嵌入式计算机</strong>：智能家电、汽车电子</li>
+</ul>
+<h3 id="1-4-应用领域"><a href="#1-4-应用领域" class="headerlink" title="1.4 应用领域"></a>1.4 应用领域</h3><p>科学计算、数据处理、过程控制、CAD/CAM、人工智能、多媒体、网络通信。</p>
+<hr>
+<h2 id="二、硬件基础"><a href="#二、硬件基础" class="headerlink" title="二、硬件基础"></a>二、硬件基础</h2><h3 id="2-1-冯·诺依曼体系（五大部件）"><a href="#2-1-冯·诺依曼体系（五大部件）" class="headerlink" title="2.1 冯·诺依曼体系（五大部件）"></a>2.1 冯·诺依曼体系（五大部件）</h3><ol>
+<li><strong>运算器（ALU）</strong>：执行算术和逻辑运算</li>
+<li><strong>控制器（CU）</strong>：指挥协调各部件</li>
+<li><strong>存储器</strong>：存储程序和数据</li>
+<li><strong>输入设备</strong>：将外部信息送入计算机</li>
+<li><strong>输出设备</strong>：将结果呈现给用户</li>
+</ol>
+<blockquote>
+<p><strong>核心思想</strong>：存储程序原理——程序和数据以同等地位存放在存储器中，按地址访问、顺序执行。</p>
+</blockquote>
+<h3 id="2-2-中央处理器（CPU）"><a href="#2-2-中央处理器（CPU）" class="headerlink" title="2.2 中央处理器（CPU）"></a>2.2 中央处理器（CPU）</h3><p><strong>主要性能指标</strong>：</p>
+<ul>
+<li><strong>主频</strong>：时钟频率（GHz）</li>
+<li><strong>核心数</strong>：物理核心数量</li>
+<li><strong>线程数</strong>：逻辑处理器数量（超线程技术）</li>
+<li><strong>缓存</strong>：L1/L2/L3，速度远高于内存</li>
+<li><strong>制程工艺</strong>：纳米级别，越小越先进</li>
+</ul>
+<p><strong>主流品牌</strong>：Intel（Core/Xeon）、AMD（Ryzen/EPYC）、ARM（移动端/Apple M系列）</p>
+<h3 id="2-3-存储器层次"><a href="#2-3-存储器层次" class="headerlink" title="2.3 存储器层次"></a>2.3 存储器层次</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">寄存器 → Cache → 主存（内存）→ 外存（硬盘/SSD）</span><br><span class="line">  ↑        ↑         ↑            ↑</span><br><span class="line">速度最快  速度很快   速度较快      速度慢</span><br><span class="line">容量最小  容量小    容量中等      容量大</span><br></pre></td></tr></table></figure>
+<p><strong>主存储器</strong>：</p>
+<ul>
+<li><strong>RAM</strong>：断电丢失，DRAM（主存）、SRAM（Cache）</li>
+<li><strong>ROM</strong>：断电保留，存储固件（BIOS/UEFI）</li>
+</ul>
+<p><strong>外存储器</strong>：</p>
+<ul>
+<li><strong>HDD</strong>：容量大、价格低、速度慢、怕震动</li>
+<li><strong>SSD</strong>：速度快、抗震、价格高（NVMe/SATA）</li>
+<li><strong>光盘/U盘</strong>：便携介质</li>
+</ul>
+<h3 id="2-4-输入-输出设备"><a href="#2-4-输入-输出设备" class="headerlink" title="2.4 输入/输出设备"></a>2.4 输入/输出设备</h3><ul>
+<li><strong>输入</strong>：键盘、鼠标、扫描仪、摄像头、麦克风</li>
+<li><strong>输出</strong>：显示器（LCD/LED/OLED）、打印机（喷墨/激光/针式）、音箱</li>
+</ul>
+<p><strong>显示器参数</strong>：分辨率（FHD/2K/4K）、刷新率（60Hz/120Hz/144Hz）</p>
+<h3 id="2-5-主板与总线"><a href="#2-5-主板与总线" class="headerlink" title="2.5 主板与总线"></a>2.5 主板与总线</h3><ul>
+<li><strong>主板</strong>：芯片组、扩展插槽（PCIe/RAM/M.2）、接口（USB/SATA/HDMI）</li>
+<li><strong>总线</strong>：数据总线、地址总线、控制总线</li>
+</ul>
+<hr>
+<h2 id="三、软件基础"><a href="#三、软件基础" class="headerlink" title="三、软件基础"></a>三、软件基础</h2><h3 id="3-1-分类"><a href="#3-1-分类" class="headerlink" title="3.1 分类"></a>3.1 分类</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">软件</span><br><span class="line">├── 系统软件</span><br><span class="line">│   ├── 操作系统（Windows/Linux/macOS）</span><br><span class="line">│   ├── 语言处理程序（编译器/解释器）</span><br><span class="line">│   ├── 数据库管理系统（MySQL/Oracle）</span><br><span class="line">│   └── 实用工具</span><br><span class="line">└── 应用软件</span><br><span class="line">    ├── 办公软件（Office/WPS）</span><br><span class="line">    ├── 图形图像（Photoshop）</span><br><span class="line">    ├── 媒体播放/剪辑</span><br><span class="line">    ├── 网络应用（浏览器/IM）</span><br><span class="line">    └── 行业专用（CAD/ERP）</span><br></pre></td></tr></table></figure>
+<h3 id="3-2-程序设计语言层级"><a href="#3-2-程序设计语言层级" class="headerlink" title="3.2 程序设计语言层级"></a>3.2 程序设计语言层级</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>代表</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>机器语言</td>
+<td>二进制指令</td>
+<td>直接执行，人难读</td>
+</tr>
+<tr>
+<td>汇编语言</td>
+<td>MOV, ADD</td>
+<td>助记符，需汇编器</td>
+</tr>
+<tr>
+<td>高级语言</td>
+<td>C/Java/Python</td>
+<td>接近自然语言</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>执行方式</strong>：</p>
+<ul>
+<li><strong>编译型</strong>（C/C++/Go）：一次翻译，执行效率高</li>
+<li><strong>解释型</strong>（Python/JS）：逐行执行，开发效率高</li>
+<li><strong>混合型</strong>（Java/C#）：编译为字节码，虚拟机执行</li>
+</ul>
+<hr>
+<h2 id="四、操作系统"><a href="#四、操作系统" class="headerlink" title="四、操作系统"></a>四、操作系统</h2><h3 id="4-1-定义与功能"><a href="#4-1-定义与功能" class="headerlink" title="4.1 定义与功能"></a>4.1 定义与功能</h3><p>操作系统是管理硬件与软件资源的系统软件，是用户与硬件的接口。</p>
+<p><strong>五大功能</strong>：处理器管理、存储管理、设备管理、文件管理、用户接口。</p>
+<h3 id="4-2-常见操作系统"><a href="#4-2-常见操作系统" class="headerlink" title="4.2 常见操作系统"></a>4.2 常见操作系统</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>系统</th>
+<th>开发商</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows</td>
+<td>Microsoft</td>
+<td>图形友好，生态丰富</td>
+</tr>
+<tr>
+<td>Linux</td>
+<td>开源社区</td>
+<td>稳定安全，服务器主流</td>
+</tr>
+<tr>
+<td>macOS</td>
+<td>Apple</td>
+<td>基于Unix，设计/开发领域</td>
+</tr>
+<tr>
+<td>Android</td>
+<td>Google</td>
+<td>移动设备主流</td>
+</tr>
+<tr>
+<td>iOS</td>
+<td>Apple</td>
+<td>闭源，流畅安全</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="4-3-进程与线程"><a href="#4-3-进程与线程" class="headerlink" title="4.3 进程与线程"></a>4.3 进程与线程</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>进程</th>
+<th>线程</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>资源</td>
+<td>独立地址空间</td>
+<td>共享进程资源</td>
+</tr>
+<tr>
+<td>通信</td>
+<td>IPC（管道/消息队列）</td>
+<td>直接共享内存</td>
+</tr>
+<tr>
+<td>切换开销</td>
+<td>大</td>
+<td>小</td>
+</tr>
+<tr>
+<td>安全性</td>
+<td>崩溃隔离</td>
+<td>可能拖垮进程</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>进程状态</strong>：新建 → 就绪 → 运行 → 阻塞 → 终止</p>
+<h3 id="4-4-文件系统"><a href="#4-4-文件系统" class="headerlink" title="4.4 文件系统"></a>4.4 文件系统</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>文件系统</th>
+<th>适用</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NTFS</td>
+<td>Windows</td>
+<td>大文件、权限控制</td>
+</tr>
+<tr>
+<td>FAT32</td>
+<td>通用</td>
+<td>兼容好，单文件≤4GB</td>
+</tr>
+<tr>
+<td>ext4</td>
+<td>Linux</td>
+<td>日志文件系统</td>
+</tr>
+<tr>
+<td>APFS</td>
+<td>macOS</td>
+<td>SSD优化，支持快照</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>路径表示</strong>：</p>
+<ul>
+<li>Windows：<code>C:\Users\Name\file.txt</code></li>
+<li>Linux/macOS：<code>/home/name/file.txt</code></li>
+</ul>
+<hr>
+<h2 id="五、数据表示"><a href="#五、数据表示" class="headerlink" title="五、数据表示"></a>五、数据表示</h2><h3 id="5-1-数制"><a href="#5-1-数制" class="headerlink" title="5.1 数制"></a>5.1 数制</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>进制</th>
+<th>基数</th>
+<th>前缀</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>二进制</td>
+<td>2</td>
+<td><code>0b</code></td>
+<td><code>0b1010</code></td>
+</tr>
+<tr>
+<td>八进制</td>
+<td>8</td>
+<td><code>0</code></td>
+<td><code>017</code></td>
+</tr>
+<tr>
+<td>十进制</td>
+<td>10</td>
+<td>无</td>
+<td><code>10</code></td>
+</tr>
+<tr>
+<td>十六进制</td>
+<td>16</td>
+<td><code>0x</code></td>
+<td><code>0xA</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="5-2-数据单位"><a href="#5-2-数据单位" class="headerlink" title="5.2 数据单位"></a>5.2 数据单位</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1 Byte = 8 bit</span><br><span class="line">1 KB = 1024 Byte</span><br><span class="line">1 MB = 1024 KB</span><br><span class="line">1 GB = 1024 MB</span><br><span class="line">1 TB = 1024 GB</span><br></pre></td></tr></table></figure>
+<h3 id="5-3-数值编码"><a href="#5-3-数值编码" class="headerlink" title="5.3 数值编码"></a>5.3 数值编码</h3><ul>
+<li><strong>原码/反码/补码</strong>：计算机使用补码表示有符号数</li>
+<li><strong>浮点数</strong>（IEEE 754）：单精度32位，双精度64位</li>
+</ul>
+<h3 id="5-4-字符编码"><a href="#5-4-字符编码" class="headerlink" title="5.4 字符编码"></a>5.4 字符编码</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>编码</th>
+<th>字节</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASCII</td>
+<td>1</td>
+<td>128字符，英文</td>
+</tr>
+<tr>
+<td>GBK</td>
+<td>1-2</td>
+<td>中文国标</td>
+</tr>
+<tr>
+<td>UTF-8</td>
+<td>1-4</td>
+<td>互联网主流，中文通常3字节</td>
+</tr>
+<tr>
+<td>UTF-16</td>
+<td>2/4</td>
+<td>Windows/Java内部</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="六、计算机网络"><a href="#六、计算机网络" class="headerlink" title="六、计算机网络"></a>六、计算机网络</h2><h3 id="6-1-网络分类"><a href="#6-1-网络分类" class="headerlink" title="6.1 网络分类"></a>6.1 网络分类</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>范围</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PAN</td>
+<td>几米内</td>
+<td>蓝牙</td>
+</tr>
+<tr>
+<td>LAN</td>
+<td>一栋建筑</td>
+<td>办公室网络</td>
+</tr>
+<tr>
+<td>MAN</td>
+<td>一个城市</td>
+<td>城域网</td>
+</tr>
+<tr>
+<td>WAN</td>
+<td>跨城市/国家</td>
+<td>互联网</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="6-2-OSI-七层模型"><a href="#6-2-OSI-七层模型" class="headerlink" title="6.2 OSI 七层模型"></a>6.2 OSI 七层模型</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>名称</th>
+<th>典型协议/设备</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7</td>
+<td>应用层</td>
+<td>HTTP、FTP、SMTP、DNS</td>
+</tr>
+<tr>
+<td>6</td>
+<td>表示层</td>
+<td>SSL/TLS、JPEG</td>
+</tr>
+<tr>
+<td>5</td>
+<td>会话层</td>
+<td>RPC</td>
+</tr>
+<tr>
+<td>4</td>
+<td>传输层</td>
+<td>TCP、UDP</td>
+</tr>
+<tr>
+<td>3</td>
+<td>网络层</td>
+<td>IP、ICMP、路由器</td>
+</tr>
+<tr>
+<td>2</td>
+<td>数据链路层</td>
+<td>MAC、交换机</td>
+</tr>
+<tr>
+<td>1</td>
+<td>物理层</td>
+<td>网线、光纤、集线器</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="6-3-IP-地址"><a href="#6-3-IP-地址" class="headerlink" title="6.3 IP 地址"></a>6.3 IP 地址</h3><p><strong>IPv4</strong>：32位，点分十进制（如 <code>192.168.1.1</code>）</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>范围</th>
+<th>默认掩码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A类</td>
+<td>1.0.0.0 - 126.255.255.255</td>
+<td>255.0.0.0</td>
+</tr>
+<tr>
+<td>B类</td>
+<td>128.0.0.0 - 191.255.255.255</td>
+<td>255.255.0.0</td>
+</tr>
+<tr>
+<td>C类</td>
+<td>192.0.0.0 - 223.255.255.255</td>
+<td>255.255.255.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>私有IP</strong>：<code>10.0.0.0/8</code>、<code>172.16.0.0/12</code>、<code>192.168.0.0/16</code></p>
+<p><strong>IPv6</strong>：128位，解决地址枯竭。</p>
+<h3 id="6-4-常用协议与端口"><a href="#6-4-常用协议与端口" class="headerlink" title="6.4 常用协议与端口"></a>6.4 常用协议与端口</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>协议</th>
+<th>端口</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP</td>
+<td>80</td>
+<td>网页浏览</td>
+</tr>
+<tr>
+<td>HTTPS</td>
+<td>443</td>
+<td>加密网页</td>
+</tr>
+<tr>
+<td>FTP</td>
+<td>20/21</td>
+<td>文件传输</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>22</td>
+<td>安全远程登录</td>
+</tr>
+<tr>
+<td>SMTP</td>
+<td>25</td>
+<td>邮件发送</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>53</td>
+<td>域名解析</td>
+</tr>
+<tr>
+<td>DHCP</td>
+<td>67/68</td>
+<td>自动分配IP</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="6-5-TCP-vs-UDP"><a href="#6-5-TCP-vs-UDP" class="headerlink" title="6.5 TCP vs UDP"></a>6.5 TCP vs UDP</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>TCP</th>
+<th>UDP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>连接</td>
+<td>面向连接</td>
+<td>无连接</td>
+</tr>
+<tr>
+<td>可靠性</td>
+<td>可靠</td>
+<td>不可靠</td>
+</tr>
+<tr>
+<td>顺序</td>
+<td>保证</td>
+<td>不保证</td>
+</tr>
+<tr>
+<td>开销</td>
+<td>大（20字节头）</td>
+<td>小（8字节头）</td>
+</tr>
+<tr>
+<td>场景</td>
+<td>网页/文件/邮件</td>
+<td>视频/语音/DNS</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="6-6-网络设备"><a href="#6-6-网络设备" class="headerlink" title="6.6 网络设备"></a>6.6 网络设备</h3><ul>
+<li><strong>网卡</strong>：接入网络接口</li>
+<li><strong>交换机</strong>：数据链路层，MAC地址转发</li>
+<li><strong>路由器</strong>：网络层，IP路由选择</li>
+<li><strong>防火墙</strong>：过滤数据包</li>
+</ul>
+<hr>
+<h2 id="七、编程与算法"><a href="#七、编程与算法" class="headerlink" title="七、编程与算法"></a>七、编程与算法</h2><h3 id="7-1-程序结构"><a href="#7-1-程序结构" class="headerlink" title="7.1 程序结构"></a>7.1 程序结构</h3><ol>
+<li><strong>顺序结构</strong>：语句顺序执行</li>
+<li><strong>选择结构</strong>：<code>if/else</code>、<code>switch</code></li>
+<li><strong>循环结构</strong>：<code>for</code>、<code>while</code></li>
+</ol>
+<h3 id="7-2-基本数据类型"><a href="#7-2-基本数据类型" class="headerlink" title="7.2 基本数据类型"></a>7.2 基本数据类型</h3><p>整型、浮点型、字符型、布尔型、字符串。</p>
+<h3 id="7-3-算法复杂度"><a href="#7-3-算法复杂度" class="headerlink" title="7.3 算法复杂度"></a>7.3 算法复杂度</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>复杂度</th>
+<th>名称</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O(1)</td>
+<td>常数</td>
+<td>哈希表访问</td>
+</tr>
+<tr>
+<td>O(log n)</td>
+<td>对数</td>
+<td>二分查找</td>
+</tr>
+<tr>
+<td>O(n)</td>
+<td>线性</td>
+<td>数组遍历</td>
+</tr>
+<tr>
+<td>O(n log n)</td>
+<td>线性对数</td>
+<td>快速排序</td>
+</tr>
+<tr>
+<td>O(n²)</td>
+<td>平方</td>
+<td>冒泡排序</td>
+</tr>
+<tr>
+<td>O(2ⁿ)</td>
+<td>指数</td>
+<td>穷举法</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="7-4-经典算法"><a href="#7-4-经典算法" class="headerlink" title="7.4 经典算法"></a>7.4 经典算法</h3><ul>
+<li><strong>排序</strong>：冒泡、选择、插入、快速、归并</li>
+<li><strong>查找</strong>：顺序、二分、哈希</li>
+<li><strong>图论</strong>：DFS、BFS、Dijkstra</li>
+<li><strong>数据结构</strong>：数组、链表、栈、队列、树、图、哈希表</li>
+</ul>
+<hr>
+<h2 id="八、数据库基础"><a href="#八、数据库基础" class="headerlink" title="八、数据库基础"></a>八、数据库基础</h2><h3 id="8-1-数据库类型"><a href="#8-1-数据库类型" class="headerlink" title="8.1 数据库类型"></a>8.1 数据库类型</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>特点</th>
+<th>代表</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>关系型</td>
+<td>二维表，SQL操作</td>
+<td>MySQL、PostgreSQL、Oracle</td>
+</tr>
+<tr>
+<td>键值对</td>
+<td>简单快速</td>
+<td>Redis</td>
+</tr>
+<tr>
+<td>文档型</td>
+<td>JSON格式</td>
+<td>MongoDB</td>
+</tr>
+<tr>
+<td>列族</td>
+<td>高写入</td>
+<td>Cassandra</td>
+</tr>
+<tr>
+<td>图数据库</td>
+<td>关系网络</td>
+<td>Neo4j</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="8-2-SQL-核心操作"><a href="#8-2-SQL-核心操作" class="headerlink" title="8.2 SQL 核心操作"></a>8.2 SQL 核心操作</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> age <span class="operator">&gt;</span> <span class="number">18</span>;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> users (name, age) <span class="keyword">VALUES</span> (<span class="string">&#x27;张三&#x27;</span>, <span class="number">20</span>);</span><br><span class="line"><span class="keyword">UPDATE</span> users <span class="keyword">SET</span> age <span class="operator">=</span> <span class="number">21</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> <span class="string">&#x27;张三&#x27;</span>;</span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> id <span class="operator">=</span> <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+<p><strong>关键概念</strong>：主键、外键、索引、事务（ACID）。</p>
+<hr>
+<h2 id="九、计算机安全"><a href="#九、计算机安全" class="headerlink" title="九、计算机安全"></a>九、计算机安全</h2><h3 id="9-1-安全三要素"><a href="#9-1-安全三要素" class="headerlink" title="9.1 安全三要素"></a>9.1 安全三要素</h3><ul>
+<li><strong>机密性</strong>：防止未授权访问</li>
+<li><strong>完整性</strong>：防止数据篡改</li>
+<li><strong>可用性</strong>：确保正常访问</li>
+</ul>
+<h3 id="9-2-常见威胁"><a href="#9-2-常见威胁" class="headerlink" title="9.2 常见威胁"></a>9.2 常见威胁</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>威胁</th>
+<th>说明</th>
+<th>防护</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>病毒</td>
+<td>自我复制恶意程序</td>
+<td>杀毒软件</td>
+</tr>
+<tr>
+<td>木马</td>
+<td>伪装窃取信息</td>
+<td>防火墙</td>
+</tr>
+<tr>
+<td>勒索软件</td>
+<td>加密文件索赎金</td>
+<td>定期备份</td>
+</tr>
+<tr>
+<td>钓鱼</td>
+<td>伪造骗取信息</td>
+<td>核实链接、2FA</td>
+</tr>
+<tr>
+<td>DDoS</td>
+<td>请求瘫痪服务</td>
+<td>CDN、流量清洗</td>
+</tr>
+<tr>
+<td>SQL注入</td>
+<td>篡改数据库</td>
+<td>参数化查询</td>
+</tr>
+<tr>
+<td>XSS</td>
+<td>注入恶意脚本</td>
+<td>输出编码</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="9-3-密码学"><a href="#9-3-密码学" class="headerlink" title="9.3 密码学"></a>9.3 密码学</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>特点</th>
+<th>算法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>对称加密</td>
+<td>同一密钥，速度快</td>
+<td>AES、DES</td>
+</tr>
+<tr>
+<td>非对称加密</td>
+<td>公钥/私钥，解决分发</td>
+<td>RSA、ECC</td>
+</tr>
+<tr>
+<td>哈希</td>
+<td>不可逆、抗碰撞</td>
+<td>SHA-256</td>
+</tr>
+<tr>
+<td>数字签名</td>
+<td>私钥签名，公钥验证</td>
+<td>RSA/DSA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="9-4-认证方式"><a href="#9-4-认证方式" class="headerlink" title="9.4 认证方式"></a>9.4 认证方式</h3><ul>
+<li><strong>单因素</strong>：仅密码</li>
+<li><strong>2FA</strong>：密码 + 手机/硬件密钥</li>
+<li><strong>MFA</strong>：密码 + 生物特征 + 令牌</li>
+<li><strong>生物识别</strong>：指纹、人脸、虹膜</li>
+</ul>
+<h3 id="9-5-安全最佳实践"><a href="#9-5-安全最佳实践" class="headerlink" title="9.5 安全最佳实践"></a>9.5 安全最佳实践</h3><ol>
+<li>强密码（12位+，混合字符），不同账户不同密码</li>
+<li>及时更新系统和软件补丁</li>
+<li>定期备份（3-2-1原则）</li>
+<li>启用防火墙，关闭不必要端口</li>
+<li>使用HTTPS，谨慎处理邮件附件</li>
+</ol>
+<hr>
+<h2 id="附录：常用快捷键"><a href="#附录：常用快捷键" class="headerlink" title="附录：常用快捷键"></a>附录：常用快捷键</h2><h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ctrl+C/V/X/Z/S</td>
+<td>复制/粘贴/剪切/撤销/保存</td>
+</tr>
+<tr>
+<td>Alt+Tab</td>
+<td>切换窗口</td>
+</tr>
+<tr>
+<td>Win+D</td>
+<td>显示桌面</td>
+</tr>
+<tr>
+<td>Win+E</td>
+<td>文件资源管理器</td>
+</tr>
+<tr>
+<td>Ctrl+Shift+Esc</td>
+<td>任务管理器</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="macOS"><a href="#macOS" class="headerlink" title="macOS"></a>macOS</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Command+C/V/Z/S</td>
+<td>复制/粘贴/撤销/保存</td>
+</tr>
+<tr>
+<td>Command+Space</td>
+<td>Spotlight搜索</td>
+</tr>
+<tr>
+<td>Command+Tab</td>
+<td>切换应用</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<blockquote>
+<p><strong>结语</strong>：本总结覆盖计算机科学核心入门知识。建议理论与实践结合，多动手操作以深化理解。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://skying123.github.io">skying123</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://skying123.github.io/2026/05/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%E6%95%99%E7%A8%8B/">https://skying123.github.io/2026/05/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%E6%95%99%E7%A8%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://skying123.github.io" target="_blank">skying123的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/">计算机</a></div><div class="post_share"><div class="social-share" data-image="/img/post.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/05/17/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95%E5%9F%BA%E7%A1%80/" title="软件测试基础"><img class="cover" src="/img/post.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">软件测试基础</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">skying123</div><div class="author-info__description">skying123的博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">13</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/skying123"><i class="fab fa-github"></i><span>跟我来</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xxxxx" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1966796674@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我的记录博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93%E6%95%99%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">计算机基础知识总结教程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">1.1.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%A6%82%E8%BF%B0"><span class="toc-number">1.2.</span> <span class="toc-text">一、计算机概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E5%AE%9A%E4%B9%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.1 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E5%8F%91%E5%B1%95%E9%98%B6%E6%AE%B5"><span class="toc-number">1.2.2.</span> <span class="toc-text">1.2 发展阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.3.</span> <span class="toc-text">1.3 分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-%E5%BA%94%E7%94%A8%E9%A2%86%E5%9F%9F"><span class="toc-number">1.2.4.</span> <span class="toc-text">1.4 应用领域</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E7%A1%AC%E4%BB%B6%E5%9F%BA%E7%A1%80"><span class="toc-number">1.3.</span> <span class="toc-text">二、硬件基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%86%AF%C2%B7%E8%AF%BA%E4%BE%9D%E6%9B%BC%E4%BD%93%E7%B3%BB%EF%BC%88%E4%BA%94%E5%A4%A7%E9%83%A8%E4%BB%B6%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.1 冯·诺依曼体系（五大部件）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E4%B8%AD%E5%A4%AE%E5%A4%84%E7%90%86%E5%99%A8%EF%BC%88CPU%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.2 中央处理器（CPU）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-%E5%AD%98%E5%82%A8%E5%99%A8%E5%B1%82%E6%AC%A1"><span class="toc-number">1.3.3.</span> <span class="toc-text">2.3 存储器层次</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E8%BE%93%E5%85%A5-%E8%BE%93%E5%87%BA%E8%AE%BE%E5%A4%87"><span class="toc-number">1.3.4.</span> <span class="toc-text">2.4 输入&#x2F;输出设备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-%E4%B8%BB%E6%9D%BF%E4%B8%8E%E6%80%BB%E7%BA%BF"><span class="toc-number">1.3.5.</span> <span class="toc-text">2.5 主板与总线</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%BD%AF%E4%BB%B6%E5%9F%BA%E7%A1%80"><span class="toc-number">1.4.</span> <span class="toc-text">三、软件基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%88%86%E7%B1%BB"><span class="toc-number">1.4.1.</span> <span class="toc-text">3.1 分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1%E8%AF%AD%E8%A8%80%E5%B1%82%E7%BA%A7"><span class="toc-number">1.4.2.</span> <span class="toc-text">3.2 程序设计语言层级</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.5.</span> <span class="toc-text">四、操作系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%8A%9F%E8%83%BD"><span class="toc-number">1.5.1.</span> <span class="toc-text">4.1 定义与功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.5.2.</span> <span class="toc-text">4.2 常见操作系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.5.3.</span> <span class="toc-text">4.3 进程与线程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-4-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.5.4.</span> <span class="toc-text">4.4 文件系统</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%A4%BA"><span class="toc-number">1.6.</span> <span class="toc-text">五、数据表示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-%E6%95%B0%E5%88%B6"><span class="toc-number">1.6.1.</span> <span class="toc-text">5.1 数制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-%E6%95%B0%E6%8D%AE%E5%8D%95%E4%BD%8D"><span class="toc-number">1.6.2.</span> <span class="toc-text">5.2 数据单位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-%E6%95%B0%E5%80%BC%E7%BC%96%E7%A0%81"><span class="toc-number">1.6.3.</span> <span class="toc-text">5.3 数值编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81"><span class="toc-number">1.6.4.</span> <span class="toc-text">5.4 字符编码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C"><span class="toc-number">1.7.</span> <span class="toc-text">六、计算机网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E7%BD%91%E7%BB%9C%E5%88%86%E7%B1%BB"><span class="toc-number">1.7.1.</span> <span class="toc-text">6.1 网络分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-OSI-%E4%B8%83%E5%B1%82%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.7.2.</span> <span class="toc-text">6.2 OSI 七层模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-IP-%E5%9C%B0%E5%9D%80"><span class="toc-number">1.7.3.</span> <span class="toc-text">6.3 IP 地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E5%B8%B8%E7%94%A8%E5%8D%8F%E8%AE%AE%E4%B8%8E%E7%AB%AF%E5%8F%A3"><span class="toc-number">1.7.4.</span> <span class="toc-text">6.4 常用协议与端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-TCP-vs-UDP"><span class="toc-number">1.7.5.</span> <span class="toc-text">6.5 TCP vs UDP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87"><span class="toc-number">1.7.6.</span> <span class="toc-text">6.6 网络设备</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E7%BC%96%E7%A8%8B%E4%B8%8E%E7%AE%97%E6%B3%95"><span class="toc-number">1.8.</span> <span class="toc-text">七、编程与算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E7%A8%8B%E5%BA%8F%E7%BB%93%E6%9E%84"><span class="toc-number">1.8.1.</span> <span class="toc-text">7.1 程序结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.8.2.</span> <span class="toc-text">7.2 基本数据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E7%AE%97%E6%B3%95%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="toc-number">1.8.3.</span> <span class="toc-text">7.3 算法复杂度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-%E7%BB%8F%E5%85%B8%E7%AE%97%E6%B3%95"><span class="toc-number">1.8.4.</span> <span class="toc-text">7.4 经典算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80"><span class="toc-number">1.9.</span> <span class="toc-text">八、数据库基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.9.1.</span> <span class="toc-text">8.1 数据库类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-SQL-%E6%A0%B8%E5%BF%83%E6%93%8D%E4%BD%9C"><span class="toc-number">1.9.2.</span> <span class="toc-text">8.2 SQL 核心操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%AE%89%E5%85%A8"><span class="toc-number">1.10.</span> <span class="toc-text">九、计算机安全</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-%E5%AE%89%E5%85%A8%E4%B8%89%E8%A6%81%E7%B4%A0"><span class="toc-number">1.10.1.</span> <span class="toc-text">9.1 安全三要素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-%E5%B8%B8%E8%A7%81%E5%A8%81%E8%83%81"><span class="toc-number">1.10.2.</span> <span class="toc-text">9.2 常见威胁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-%E5%AF%86%E7%A0%81%E5%AD%A6"><span class="toc-number">1.10.3.</span> <span class="toc-text">9.3 密码学</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-4-%E8%AE%A4%E8%AF%81%E6%96%B9%E5%BC%8F"><span class="toc-number">1.10.4.</span> <span class="toc-text">9.4 认证方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-5-%E5%AE%89%E5%85%A8%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.10.5.</span> <span class="toc-text">9.5 安全最佳实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">1.11.</span> <span class="toc-text">附录：常用快捷键</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows"><span class="toc-number">1.11.1.</span> <span class="toc-text">Windows</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#macOS"><span class="toc-number">1.11.2.</span> <span class="toc-text">macOS</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/post.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2026 By skying123</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">I wish you to become your own sun, no need to rely on who's light.<p><a target="_blank" href="https://hexo.io/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为Hexo"></a>&nbsp;<a target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用butterfly"></a>&nbsp;<a target="_blank" href="https://www.jsdelivr.com/"><img src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用JsDelivr为静态资源提供CDN加速"></a> &nbsp;<a target="_blank" href="https://vercel.com/ "><img src="https://img.shields.io/badge/Hosted-Vervel-brightgreen?style=flat&logo=Vercel" title="本站采用双线部署，默认线路托管于Vercel"></a>&nbsp;<a target="_blank" href="https://vercel.com/ "><img src="https://img.shields.io/badge/Hosted-Coding-0cedbe?style=flat&logo=Codio" title="本站采用双线部署，联通线路托管于Coding"></a>&nbsp;<a target="_blank" href="https://github.com/"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由Gtihub托管"></a>&nbsp;<a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.12.0"></script><script src="/js/main.js?v=4.12.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'default' : 'light'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.12.0"></script></div></div></body></html>
