@@ -1,0 +1,754 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>QA Portfolio 项目完整复盘与 Pytest 深度解析文档 | skying123的博客</title><meta name="author" content="skying123"><meta name="copyright" content="skying123"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="QA Portfolio 项目完整复盘与 Pytest 深度解析文档 项目周期：2026-05-20 至 2026-05-24核心产出：一套可运行的 API&#x2F;UI&#x2F;性能自动化框架 + Jenkins CI&#x2F;CD 流水线 + 可视化 Allure 报告   目录 技术架构设计 项目结构与文件详解 核心代码逐行解析 Jenkins 私有化部署全过程 问题记录与解决方案 Pytest 核心知识点与项目应">
+<meta property="og:type" content="article">
+<meta property="og:title" content="QA Portfolio 项目完整复盘与 Pytest 深度解析文档">
+<meta property="og:url" content="https://skying123.github.io/2026/05/26/QA_Portfolio_%E5%AE%8C%E6%95%B4%E5%A4%8D%E7%9B%98%E4%B8%8EPytest%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="skying123的博客">
+<meta property="og:description" content="QA Portfolio 项目完整复盘与 Pytest 深度解析文档 项目周期：2026-05-20 至 2026-05-24核心产出：一套可运行的 API&#x2F;UI&#x2F;性能自动化框架 + Jenkins CI&#x2F;CD 流水线 + 可视化 Allure 报告   目录 技术架构设计 项目结构与文件详解 核心代码逐行解析 Jenkins 私有化部署全过程 问题记录与解决方案 Pytest 核心知识点与项目应">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://skying123.github.io/img/index.jpg">
+<meta property="article:published_time" content="2026-05-26T03:36:00.000Z">
+<meta property="article:modified_time" content="2026-05-26T03:37:11.889Z">
+<meta property="article:author" content="skying123">
+<meta property="article:tag" content="allure">
+<meta property="article:tag" content="github">
+<meta property="article:tag" content="项目实战">
+<meta property="article:tag" content="pytest">
+<meta property="article:tag" content="selenium">
+<meta property="article:tag" content="CI&#x2F;CD">
+<meta property="article:tag" content="Jenkins">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://skying123.github.io/img/index.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://skying123.github.io/2026/05/26/QA_Portfolio_%E5%AE%8C%E6%95%B4%E5%A4%8D%E7%9B%98%E4%B8%8EPytest%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.12.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":730,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体中文","cht_to_chs":"你已切换为简体中文","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#49b1f5","bgDark":"#1f1f1f","position":"bottom-left"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'QA Portfolio 项目完整复盘与 Pytest 深度解析文档',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-05-26 11:37:11'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><link rel="stylesheet" href="/source/css/myStyle.css"><meta name="generator" content="Hexo 7.0.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load',() => { preloader.endLoading() })
+
+  if (true) {
+    document.addEventListener('pjax:send', () => { preloader.initLoading() })
+    document.addEventListener('pjax:complete', () => { preloader.endLoading() })
+  }
+})()</script><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">48</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">17</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/index.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="skying123的博客"><span class="site-name">skying123的博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">QA Portfolio 项目完整复盘与 Pytest 深度解析文档</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-26T03:36:00.000Z" title="发表于 2026-05-26 11:36:00">2026-05-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-26T03:37:11.889Z" title="更新于 2026-05-26 11:37:11">2026-05-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95/">自动化测试</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>25分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="QA Portfolio 项目完整复盘与 Pytest 深度解析文档"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="QA-Portfolio-项目完整复盘与-Pytest-深度解析文档"><a href="#QA-Portfolio-项目完整复盘与-Pytest-深度解析文档" class="headerlink" title="QA Portfolio 项目完整复盘与 Pytest 深度解析文档"></a>QA Portfolio 项目完整复盘与 Pytest 深度解析文档</h1><blockquote>
+<p><strong>项目周期</strong>：2026-05-20 至 2026-05-24<br><strong>核心产出</strong>：一套可运行的 API/UI/性能自动化框架 + Jenkins CI/CD 流水线 + 可视化 Allure 报告</p>
+</blockquote>
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li><a href="#一技术架构设计">技术架构设计</a></li>
+<li><a href="#二项目结构与文件详解">项目结构与文件详解</a></li>
+<li><a href="#三核心代码逐行解析">核心代码逐行解析</a></li>
+<li><a href="#四jenkins-私有化部署全过程">Jenkins 私有化部署全过程</a></li>
+<li><a href="#五问题记录与解决方案">问题记录与解决方案</a></li>
+<li><a href="#六pytest-核心知识点与项目应用">Pytest 核心知识点与项目应用</a></li>
+<li><a href="#七selenium-核心知识点">Selenium 核心知识点</a></li>
+<li><a href="#八性能测试基线">性能测试基线</a></li>
+<li><a href="#九求职价值提炼">求职价值提炼</a></li>
+<li><a href="#十关键命令速查">关键命令速查</a></li>
+</ol>
+<hr>
+<h2 id="一、技术架构设计"><a href="#一、技术架构设计" class="headerlink" title="一、技术架构设计"></a>一、技术架构设计</h2><h3 id="1-1-项目结构"><a href="#1-1-项目结构" class="headerlink" title="1.1 项目结构"></a>1.1 项目结构</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">qa-portfolio/</span><br><span class="line">├── .github/workflows/ci.yml      # GitHub Actions CI（备用）</span><br><span class="line">├── docker-compose.yml            # Jenkins 私有化部署</span><br><span class="line">├── Dockerfile                    # 自定义 Jenkins 镜像（预装环境）</span><br><span class="line">├── Jenkinsfile                   # Jenkins Pipeline 定义</span><br><span class="line">├── conftest.py                   # 根目录：全局 --env 参数注册</span><br><span class="line">├── requirements.txt              # Python 依赖</span><br><span class="line">├── pytest.ini                    # markers + pythonpath</span><br><span class="line">├── README.md                     # 架构文档 + 性能基线</span><br><span class="line">├── api_tests/                    # API 自动化</span><br><span class="line">│   ├── conftest.py               # env/api_config/api_client fixture</span><br><span class="line">│   ├── test_auth.py               # 登录认证（正/反/参数化）</span><br><span class="line">│   └── test_users.py              # 用户 CRUD</span><br><span class="line">├── ui_tests/                     # UI 自动化（Selenium POM）</span><br><span class="line">│   ├── conftest.py               # driver fixture + 失败截图钩子</span><br><span class="line">│   └── test_e2e.py               # 登录/加购/结账 E2E + xfail 截图演示</span><br><span class="line">├── pages/                        # POM 页面对象</span><br><span class="line">│   ├── base_page.py               # 显式等待 + Allure steps + 截图</span><br><span class="line">│   ├── login_page.py</span><br><span class="line">│   ├── inventory_page.py</span><br><span class="line">│   ├── cart_page.py</span><br><span class="line">│   └── checkout_page.py</span><br><span class="line">├── utils/                        # 工具封装</span><br><span class="line">│   ├── api_client.py              # 生产级客户端：自动重试 + Session 复用</span><br><span class="line">│   └── config_reader.py           # 多环境配置读取（dev/prod）</span><br><span class="line">├── data/</span><br><span class="line">│   └── users.yaml                 # 测试数据（API + UI 统一 YAML）</span><br><span class="line">├── config/</span><br><span class="line">│   ├── dev.ini                    # 开发环境（headless=false）</span><br><span class="line">│   └── prod.ini                   # CI 环境（headless=true）</span><br><span class="line">└── performance/</span><br><span class="line">    └── jmeter/</span><br><span class="line">        ├── dummyjson_load_test.jmx</span><br><span class="line">        ├── data/users.csv</span><br><span class="line">        └── html-report/</span><br></pre></td></tr></table></figure>
+<h3 id="1-2-核心技术选型"><a href="#1-2-核心技术选型" class="headerlink" title="1.2 核心技术选型"></a>1.2 核心技术选型</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>技术</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>测试框架</td>
+<td>Pytest</td>
+<td>用例组织、fixture、参数化、标记</td>
+</tr>
+<tr>
+<td>API 测试</td>
+<td>requests + tenacity</td>
+<td>接口请求 + 智能重试</td>
+</tr>
+<tr>
+<td>UI 测试</td>
+<td>Selenium + WebDriverManager</td>
+<td>浏览器自动化</td>
+</tr>
+<tr>
+<td>设计模式</td>
+<td>POM（Page Object Model）</td>
+<td>页面对象封装，降低维护成本</td>
+</tr>
+<tr>
+<td>数据驱动</td>
+<td>YAML</td>
+<td>测试数据与业务逻辑分离</td>
+</tr>
+<tr>
+<td>报告</td>
+<td>Allure</td>
+<td>可视化报告、趋势图、附件、步骤</td>
+</tr>
+<tr>
+<td>CI/CD</td>
+<td>GitHub Actions + Jenkins</td>
+<td>双流水线，GitHub 用于公网展示，Jenkins 用于私有化</td>
+</tr>
+<tr>
+<td>性能测试</td>
+<td>JMeter</td>
+<td>负载测试、基线数据</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>Docker + Docker Compose</td>
+<td>Jenkins 一键私有化部署</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="二、项目结构与文件详解"><a href="#二、项目结构与文件详解" class="headerlink" title="二、项目结构与文件详解"></a>二、项目结构与文件详解</h2><h3 id="2-1-配置文件层"><a href="#2-1-配置文件层" class="headerlink" title="2.1 配置文件层"></a>2.1 配置文件层</h3><h4 id="pytest-ini-——-Pytest-全局配置"><a href="#pytest-ini-——-Pytest-全局配置" class="headerlink" title="pytest.ini —— Pytest 全局配置"></a><code>pytest.ini</code> —— Pytest 全局配置</h4><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[pytest]</span></span><br><span class="line"><span class="attr">markers</span> =</span><br><span class="line">    smoke: 冒烟测试标记</span><br><span class="line">    regression: 回归测试标记</span><br><span class="line">    ui: UI 自动化标记</span><br><span class="line"><span class="attr">pythonpath</span> = .</span><br></pre></td></tr></table></figure>
+<p><strong>作用解析</strong>：</p>
+<ul>
+<li><code>markers</code>：注册自定义标记，避免运行时报 <code>PytestUnknownMarkWarning</code>。项目中用 <code>@pytest.mark.smoke</code>、<code>@pytest.mark.ui</code> 等标记区分测试类型</li>
+<li><code>pythonpath = .</code>：将项目根目录加入 Python 模块搜索路径，确保 <code>from pages.xxx import</code> 等跨目录导入正常工作</li>
+</ul>
+<h4 id="config-dev-ini-与-config-prod-ini-——-多环境配置"><a href="#config-dev-ini-与-config-prod-ini-——-多环境配置" class="headerlink" title="config/dev.ini 与 config/prod.ini —— 多环境配置"></a><code>config/dev.ini</code> 与 <code>config/prod.ini</code> —— 多环境配置</h4><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[api]</span></span><br><span class="line"><span class="attr">base_url</span> = https://dummyjson.com</span><br><span class="line"><span class="attr">timeout</span> = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="section">[ui]</span></span><br><span class="line"><span class="attr">base_url</span> = https://www.saucedemo.com</span><br><span class="line"><span class="attr">browser</span> = chrome</span><br><span class="line"><span class="attr">headless</span> = <span class="literal">false</span></span><br><span class="line"><span class="attr">driver_path</span> = drivers/chromedriver.exe</span><br></pre></td></tr></table></figure>
+<p><strong>设计意图</strong>：</p>
+<ul>
+<li><code>dev.ini</code>：<code>headless=false</code> 方便本地调试时看到浏览器操作；<code>driver_path</code> 指向本地 chromedriver</li>
+<li><code>prod.ini</code>：<code>headless=true</code> 适合 CI 无头运行；<code>driver_path</code> 留空，fallback 到系统驱动或 webdriver-manager 自动下载</li>
+<li>通过 <code>pytest --env=prod</code> 切换环境，<strong>零代码改动</strong></li>
+</ul>
+<h4 id="data-users-yaml-——-统一测试数据中心"><a href="#data-users-yaml-——-统一测试数据中心" class="headerlink" title="data/users.yaml —— 统一测试数据中心"></a><code>data/users.yaml</code> —— 统一测试数据中心</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">auth:</span></span><br><span class="line">  <span class="attr">valid:</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">emilys</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">emilyspass</span></span><br><span class="line">  <span class="attr">invalid_password:</span></span><br><span class="line">    <span class="attr">username:</span> <span class="string">emilys</span></span><br><span class="line">    <span class="attr">password:</span> <span class="string">wrongpass</span></span><br><span class="line"></span><br><span class="line"><span class="attr">ui:</span></span><br><span class="line">  <span class="attr">saucedemo:</span></span><br><span class="line">    <span class="attr">valid:</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">standard_user</span></span><br><span class="line">      <span class="attr">password:</span> <span class="string">secret_sauce</span></span><br></pre></td></tr></table></figure>
+<p><strong>设计意图</strong>：</p>
+<ul>
+<li>API 和 UI 的测试数据集中管理，新增边界值只需改 YAML</li>
+<li>与代码分离，非技术人员也能参与数据维护</li>
+</ul>
+<hr>
+<h3 id="2-2-基础设施层"><a href="#2-2-基础设施层" class="headerlink" title="2.2 基础设施层"></a>2.2 基础设施层</h3><h4 id="utils-config-reader-py-——-配置读取器"><a href="#utils-config-reader-py-——-配置读取器" class="headerlink" title="utils/config_reader.py —— 配置读取器"></a><code>utils/config_reader.py</code> —— 配置读取器</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> configparser</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Dict</span>, <span class="type">Any</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_config</span>(<span class="params">env: <span class="built_in">str</span> = <span class="string">&quot;dev&quot;</span></span>) -&gt; configparser.ConfigParser:</span><br><span class="line">    root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span><br><span class="line">    config_path = os.path.join(root_dir, <span class="string">&quot;config&quot;</span>, <span class="string">f&quot;<span class="subst">&#123;env&#125;</span>.ini&quot;</span>)</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(config_path):</span><br><span class="line">        <span class="keyword">raise</span> FileNotFoundError(<span class="string">f&quot;Config file not found: <span class="subst">&#123;config_path&#125;</span>&quot;</span>)</span><br><span class="line">    config = configparser.ConfigParser()</span><br><span class="line">    config.read(config_path, encoding=<span class="string">&quot;utf-8&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> config</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_api_config</span>(<span class="params">env: <span class="built_in">str</span> = <span class="string">&quot;dev&quot;</span></span>) -&gt; <span class="type">Dict</span>[<span class="built_in">str</span>, <span class="type">Any</span>]:</span><br><span class="line">    config = get_config(env)</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;base_url&quot;</span>: config.get(<span class="string">&quot;api&quot;</span>, <span class="string">&quot;base_url&quot;</span>),</span><br><span class="line">        <span class="string">&quot;timeout&quot;</span>: config.getint(<span class="string">&quot;api&quot;</span>, <span class="string">&quot;timeout&quot;</span>, fallback=<span class="number">10</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_ui_config</span>(<span class="params">env: <span class="built_in">str</span> = <span class="string">&quot;dev&quot;</span></span>) -&gt; <span class="type">Dict</span>[<span class="built_in">str</span>, <span class="type">Any</span>]:</span><br><span class="line">    config = get_config(env)</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;base_url&quot;</span>: config.get(<span class="string">&quot;ui&quot;</span>, <span class="string">&quot;base_url&quot;</span>),</span><br><span class="line">        <span class="string">&quot;browser&quot;</span>: config.get(<span class="string">&quot;ui&quot;</span>, <span class="string">&quot;browser&quot;</span>),</span><br><span class="line">        <span class="string">&quot;headless&quot;</span>: config.getboolean(<span class="string">&quot;ui&quot;</span>, <span class="string">&quot;headless&quot;</span>, fallback=<span class="literal">True</span>),</span><br><span class="line">        <span class="string">&quot;driver_path&quot;</span>: config.get(<span class="string">&quot;ui&quot;</span>, <span class="string">&quot;driver_path&quot;</span>, fallback=<span class="string">&quot;&quot;</span>).strip()</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>逐行解析</strong>：</p>
+<ul>
+<li><code>os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</code>：从 <code>utils/config_reader.py</code> 出发，向上回退两级到项目根目录（<code>utils/</code> -&gt; <code>qa-portfolio/</code>），确保无论从哪里运行，都能找到 <code>config/</code> 目录</li>
+<li><code>configparser.ConfigParser()</code>：Python 标准库，专门解析 INI 格式配置文件</li>
+<li><code>config.getint(..., fallback=10)</code>：读取整数，若配置项不存在则使用默认值 10，避免抛异常</li>
+<li><code>config.getboolean(...)</code>：解析 <code>&quot;true&quot;</code>/<code>&quot;false&quot;</code>/<code>&quot;yes&quot;</code>/<code>&quot;no&quot;</code>/<code>&quot;1&quot;</code>/<code>&quot;0&quot;</code> 等布尔值表示</li>
+</ul>
+<h4 id="utils-api-client-py-——-生产级-API-客户端"><a href="#utils-api-client-py-——-生产级-API-客户端" class="headerlink" title="utils/api_client.py —— 生产级 API 客户端"></a><code>utils/api_client.py</code> —— 生产级 API 客户端</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> tenacity <span class="keyword">import</span> retry, stop_after_attempt, retry_if_exception_type</span><br><span class="line"><span class="keyword">from</span> requests.exceptions <span class="keyword">import</span> RequestException</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ApiClient</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, base_url: <span class="built_in">str</span>, timeout: <span class="built_in">int</span> = <span class="number">10</span></span>):</span><br><span class="line">        self.session = requests.Session()</span><br><span class="line">        self.base_url = base_url.rstrip(<span class="string">&quot;/&quot;</span>)</span><br><span class="line">        self.timeout = timeout</span><br><span class="line"></span><br><span class="line"><span class="meta">    @retry(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="meta">        stop=stop_after_attempt(<span class="params"><span class="number">3</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">        retry=retry_if_exception_type(<span class="params">RequestException</span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">        reraise=<span class="literal">True</span></span></span></span><br><span class="line"><span class="params"><span class="meta">    </span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">request</span>(<span class="params">self, method: <span class="built_in">str</span>, endpoint: <span class="built_in">str</span>, **kwargs</span>):</span><br><span class="line">        url = <span class="string">f&quot;<span class="subst">&#123;self.base_url&#125;</span>/<span class="subst">&#123;endpoint.lstrip(<span class="string">&#x27;/&#x27;</span>)&#125;</span>&quot;</span><span class="string">&quot;</span></span><br><span class="line"><span class="string">        return self.session.request(</span></span><br><span class="line"><span class="string">            method=method,</span></span><br><span class="line"><span class="string">            url=url,</span></span><br><span class="line"><span class="string">            timeout=self.timeout,</span></span><br><span class="line"><span class="string">            **kwargs</span></span><br><span class="line"><span class="string">        )</span></span><br></pre></td></tr></table></figure>
+<p><strong>逐行解析</strong>：</p>
+<ul>
+<li><code>requests.Session()</code>：创建会话对象，<strong>复用 TCP 连接池</strong>，避免每次请求都新建连接，25 条用例从 15 秒降到 5 秒</li>
+<li><code>@retry(...)</code>：tenacity 装饰器，实现智能重试<ul>
+<li><code>stop_after_attempt(3)</code>：最多重试 3 次</li>
+<li><code>retry_if_exception_type(RequestException)</code>：<strong>只对网络层异常重试</strong>（如连接超时、DNS 失败），不对 4xx/5xx 重试，避免给服务端增加无效压力</li>
+<li><code>reraise=True</code>：重试耗尽后抛出原始异常，不吞掉错误</li>
+</ul>
+</li>
+<li><code>self.base_url.rstrip(&quot;/&quot;)</code> 和 <code>endpoint.lstrip(&#39;/&#39;)</code>：智能拼接 URL，避免 <code>https://api.com//path</code> 这种双斜杠问题</li>
+</ul>
+<hr>
+<h3 id="2-3-POM-页面对象层"><a href="#2-3-POM-页面对象层" class="headerlink" title="2.3 POM 页面对象层"></a>2.3 POM 页面对象层</h3><h4 id="pages-base-page-py-——-所有页面的基类"><a href="#pages-base-page-py-——-所有页面的基类" class="headerlink" title="pages/base_page.py —— 所有页面的基类"></a><code>pages/base_page.py</code> —— 所有页面的基类</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> allure</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.remote.webdriver <span class="keyword">import</span> WebDriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support.wait <span class="keyword">import</span> WebDriverWait</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.support <span class="keyword">import</span> expected_conditions <span class="keyword">as</span> EC</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">List</span>, <span class="type">Tuple</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BasePage</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, driver: WebDriver, base_url: <span class="built_in">str</span></span>):</span><br><span class="line">        self.driver = driver</span><br><span class="line">        self.base_url = base_url.rstrip(<span class="string">&quot;/&quot;</span>)</span><br><span class="line">        self.wait = WebDriverWait(driver, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">open</span>(<span class="params">self, url: <span class="built_in">str</span> = <span class="string">&quot;&quot;</span></span>):</span><br><span class="line">        full_url = <span class="string">f&quot;<span class="subst">&#123;self.base_url&#125;</span>/<span class="subst">&#123;url.lstrip(<span class="string">&#x27;/&#x27;</span>)&#125;</span>&quot;</span> <span class="keyword">if</span> url <span class="keyword">else</span> self.base_url</span><br><span class="line">        <span class="keyword">with</span> allure.step(<span class="string">f&quot;Open page: <span class="subst">&#123;full_url&#125;</span>&quot;</span>):</span><br><span class="line">            self.driver.get(full_url)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">find_element</span>(<span class="params">self, locator: <span class="type">Tuple</span>[<span class="built_in">str</span>, <span class="built_in">str</span>]</span>):</span><br><span class="line">        <span class="keyword">return</span> self.wait.until(EC.visibility_of_element_located(locator))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">click</span>(<span class="params">self, locator: <span class="type">Tuple</span>[<span class="built_in">str</span>, <span class="built_in">str</span>]</span>):</span><br><span class="line">        element = self.wait.until(EC.element_to_be_clickable(locator))</span><br><span class="line">        <span class="keyword">with</span> allure.step(<span class="string">f&quot;Click element: <span class="subst">&#123;locator&#125;</span>&quot;</span>):</span><br><span class="line">            element.click()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">input_text</span>(<span class="params">self, locator: <span class="type">Tuple</span>[<span class="built_in">str</span>, <span class="built_in">str</span>], text: <span class="built_in">str</span></span>):</span><br><span class="line">        element = self.find_element(locator)</span><br><span class="line">        <span class="keyword">with</span> allure.step(<span class="string">f&quot;Input text &#x27;<span class="subst">&#123;text&#125;</span>&#x27; to: <span class="subst">&#123;locator&#125;</span>&quot;</span>):</span><br><span class="line">            element.clear()</span><br><span class="line">            element.send_keys(text)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">take_screenshot</span>(<span class="params">self, name: <span class="built_in">str</span> = <span class="string">&quot;Screenshot&quot;</span></span>):</span><br><span class="line">        png = self.driver.get_screenshot_as_png()</span><br><span class="line">        allure.attach(png, name=name, attachment_type=allure.attachment_type.PNG)</span><br></pre></td></tr></table></figure>
+<p><strong>设计模式解析</strong>：</p>
+<ul>
+<li><strong>POM 核心思想</strong>：把页面元素定位和操作逻辑封装到类中，测试用例只关注业务流程，不直接写 <code>find_element</code></li>
+<li><strong>显式等待</strong>：<code>WebDriverWait(driver, 10)</code> + <code>EC.visibility_of_element_located()</code>，比 <code>time.sleep()</code> 更智能，元素出现后立刻执行</li>
+<li><strong>Allure 步骤</strong>：<code>with allure.step(...)</code> 把每个操作记录到报告中，生成可视化的执行步骤树</li>
+<li><strong>类型注解</strong>：<code>locator: Tuple[str, str]</code> 表示 <code>(By.ID, &quot;user-name&quot;)</code> 这种定位器元组，IDE 有代码提示</li>
+</ul>
+<h4 id="pages-login-page-py-——-登录页面对象"><a href="#pages-login-page-py-——-登录页面对象" class="headerlink" title="pages/login_page.py —— 登录页面对象"></a><code>pages/login_page.py</code> —— 登录页面对象</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line"><span class="keyword">import</span> allure</span><br><span class="line"><span class="keyword">from</span> pages.base_page <span class="keyword">import</span> BasePage</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LoginPage</span>(<span class="title class_ inherited__">BasePage</span>):</span><br><span class="line">    USERNAME_INPUT = (By.ID, <span class="string">&quot;user-name&quot;</span>)</span><br><span class="line">    PASSWORD_INPUT = (By.ID, <span class="string">&quot;password&quot;</span>)</span><br><span class="line">    LOGIN_BUTTON = (By.ID, <span class="string">&quot;login-button&quot;</span>)</span><br><span class="line">    ERROR_MESSAGE = (By.CSS_SELECTOR, <span class="string">&quot;[data-test=&#x27;error&#x27;]&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">self, username: <span class="built_in">str</span>, password: <span class="built_in">str</span></span>):</span><br><span class="line">        <span class="keyword">with</span> allure.step(<span class="string">f&quot;Login: username=<span class="subst">&#123;username&#125;</span>&quot;</span>):</span><br><span class="line">            self.input_text(self.USERNAME_INPUT, username)</span><br><span class="line">            self.input_text(self.PASSWORD_INPUT, password)</span><br><span class="line">            self.click(self.LOGIN_BUTTON)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_error_message</span>(<span class="params">self</span>) -&gt; <span class="built_in">str</span>:</span><br><span class="line">        <span class="keyword">return</span> self.get_text(self.ERROR_MESSAGE)</span><br></pre></td></tr></table></figure>
+<p><strong>设计意图</strong>：</p>
+<ul>
+<li>元素定位器作为<strong>类属性</strong>（<code>USERNAME_INPUT</code>），集中管理，DOM 变化时只需改一处</li>
+<li><code>login()</code> 方法封装完整的登录操作，测试用例只需一行 <code>login_page.login(&quot;user&quot;, &quot;pass&quot;)</code></li>
+<li>密码在 Allure 报告中显示为明文？实际项目中可脱敏处理，但 demo 项目简化展示</li>
+</ul>
+<hr>
+<h3 id="2-4-Fixture-与钩子层"><a href="#2-4-Fixture-与钩子层" class="headerlink" title="2.4 Fixture 与钩子层"></a>2.4 Fixture 与钩子层</h3><h4 id="根目录-conftest-py-——-全局参数注册"><a href="#根目录-conftest-py-——-全局参数注册" class="headerlink" title="根目录 conftest.py —— 全局参数注册"></a>根目录 <code>conftest.py</code> —— 全局参数注册</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">pytest_addoption</span>(<span class="params">parser</span>):</span><br><span class="line">    parser.addoption(</span><br><span class="line">        <span class="string">&quot;--env&quot;</span>,</span><br><span class="line">        action=<span class="string">&quot;store&quot;</span>,</span><br><span class="line">        default=<span class="string">&quot;dev&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;Specify test environment: dev | prod&quot;</span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+<p><strong>关键设计</strong>：</p>
+<ul>
+<li>放在<strong>项目根目录</strong>，确保 <code>api_tests/</code> 和 <code>ui_tests/</code> 都能读取到 <code>--env</code> 参数</li>
+<li>之前错误地把 <code>pytest_addoption</code> 放在 <code>api_tests/conftest.py</code>，导致运行 <code>ui_tests/</code> 时参数未注册</li>
+</ul>
+<h4 id="ui-tests-conftest-py-——-Driver-管理与失败截图"><a href="#ui-tests-conftest-py-——-Driver-管理与失败截图" class="headerlink" title="ui_tests/conftest.py —— Driver 管理与失败截图"></a><code>ui_tests/conftest.py</code> —— Driver 管理与失败截图</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"><span class="keyword">import</span> allure</span><br><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.chrome.service <span class="keyword">import</span> Service <span class="keyword">as</span> ChromeService</span><br><span class="line"><span class="keyword">from</span> selenium.webdriver.chrome.options <span class="keyword">import</span> Options <span class="keyword">as</span> ChromeOptions</span><br><span class="line"><span class="keyword">from</span> webdriver_manager.chrome <span class="keyword">import</span> ChromeDriverManager</span><br><span class="line"><span class="keyword">from</span> utils.config_reader <span class="keyword">import</span> get_ui_config</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.fixture(<span class="params">scope=<span class="string">&quot;function&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">driver</span>(<span class="params">ui_config</span>):</span><br><span class="line">    browser = ui_config[<span class="string">&quot;browser&quot;</span>].lower()</span><br><span class="line">    headless = ui_config[<span class="string">&quot;headless&quot;</span>]</span><br><span class="line">    driver_path = ui_config[<span class="string">&quot;driver_path&quot;</span>]</span><br><span class="line"></span><br><span class="line">    options = ChromeOptions()</span><br><span class="line">    <span class="keyword">if</span> headless:</span><br><span class="line">        options.add_argument(<span class="string">&quot;--headless=new&quot;</span>)</span><br><span class="line">    options.add_argument(<span class="string">&quot;--no-sandbox&quot;</span>)</span><br><span class="line">    options.add_argument(<span class="string">&quot;--disable-dev-shm-usage&quot;</span>)</span><br><span class="line">    options.add_argument(<span class="string">&quot;--window-size=1920,1080&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 三级 fallback 策略</span></span><br><span class="line">    <span class="keyword">if</span> driver_path <span class="keyword">and</span> os.path.exists(driver_path):</span><br><span class="line">        service = ChromeService(executable_path=driver_path)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        system_paths = [<span class="string">&quot;/usr/bin/chromedriver&quot;</span>, <span class="string">&quot;/usr/local/bin/chromedriver&quot;</span>]</span><br><span class="line">        chromedriver_path = <span class="literal">None</span></span><br><span class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> system_paths:</span><br><span class="line">            <span class="keyword">if</span> os.path.exists(p):</span><br><span class="line">                chromedriver_path = p</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">        <span class="keyword">if</span> chromedriver_path:</span><br><span class="line">            service = ChromeService(executable_path=chromedriver_path)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            service = ChromeService(ChromeDriverManager().install())</span><br><span class="line"></span><br><span class="line">    driver = webdriver.Chrome(service=service, options=options)</span><br><span class="line">    driver.implicitly_wait(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">yield</span> driver</span><br><span class="line">    driver.quit()</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.hookimpl(<span class="params">hookwrapper=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pytest_runtest_makereport</span>(<span class="params">item, call</span>):</span><br><span class="line">    outcome = <span class="keyword">yield</span></span><br><span class="line">    report = outcome.get_result()</span><br><span class="line">    <span class="keyword">if</span> report.when == <span class="string">&quot;call&quot;</span> <span class="keyword">and</span> (report.failed <span class="keyword">or</span> <span class="built_in">getattr</span>(report, <span class="string">&quot;wasxfail&quot;</span>, <span class="literal">False</span>)):</span><br><span class="line">        driver = item.funcargs.get(<span class="string">&quot;driver&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> driver:</span><br><span class="line">            allure.attach(</span><br><span class="line">                driver.get_screenshot_as_png(),</span><br><span class="line">                name=<span class="string">&quot;Failure Screenshot&quot;</span>,</span><br><span class="line">                attachment_type=allure.attachment_type.PNG</span><br><span class="line">            )</span><br></pre></td></tr></table></figure>
+<p><strong>逐行解析</strong>：</p>
+<ul>
+<li><code>scope=&quot;function&quot;</code>：每个测试函数独立启动/关闭浏览器，保证测试隔离</li>
+<li><code>--headless=new</code>：Chrome 109+ 的新无头模式，比旧版 <code>--headless</code> 更稳定</li>
+<li><code>--no-sandbox</code> + <code>--disable-dev-shm-usage</code>：Docker 容器内运行 Chrome 的必需参数，解决权限和共享内存问题</li>
+<li><strong>三级 fallback</strong>：本地驱动 -&gt; 系统驱动 -&gt; webdriver-manager 自动下载，确保 CI 和本地都能跑通</li>
+<li><code>driver.implicitly_wait(0)</code>：禁用隐式等待，强制使用显式等待（更精确可控）</li>
+<li><code>pytest_runtest_makereport</code>：<strong>Pytest 钩子函数</strong>，在测试执行完成后拦截报告<ul>
+<li><code>report.when == &quot;call&quot;</code>：只在实际执行阶段（非 setup/teardown）触发</li>
+<li><code>getattr(report, &quot;wasxfail&quot;, False)</code>：兼容 <code>xfail</code> 标记的失败场景（之前踩过的坑）</li>
+<li><code>item.funcargs.get(&quot;driver&quot;)</code>：从测试函数的参数中获取 driver 实例，实现失败自动截图</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2-5-测试用例层"><a href="#2-5-测试用例层" class="headerlink" title="2.5 测试用例层"></a>2.5 测试用例层</h3><h4 id="ui-tests-test-e2e-py-——-端到端测试"><a href="#ui-tests-test-e2e-py-——-端到端测试" class="headerlink" title="ui_tests/test_e2e.py —— 端到端测试"></a><code>ui_tests/test_e2e.py</code> —— 端到端测试</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"><span class="keyword">import</span> allure</span><br><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> pages.login_page <span class="keyword">import</span> LoginPage</span><br><span class="line"><span class="keyword">from</span> pages.inventory_page <span class="keyword">import</span> InventoryPage</span><br><span class="line"><span class="keyword">from</span> pages.cart_page <span class="keyword">import</span> CartPage</span><br><span class="line"><span class="keyword">from</span> pages.checkout_page <span class="keyword">import</span> CheckoutPage</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载 YAML 测试数据</span></span><br><span class="line">TEST_DATA = yaml.safe_load(<span class="built_in">open</span>(<span class="string">&quot;data/users.yaml&quot;</span>))</span><br><span class="line"></span><br><span class="line"><span class="meta">@allure.feature(<span class="params"><span class="string">&quot;UI Automation&quot;</span></span>)</span></span><br><span class="line"><span class="meta">@allure.story(<span class="params"><span class="string">&quot;SauceDemo E-commerce Flow&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TestSauceDemo</span>:</span><br><span class="line"></span><br><span class="line"><span class="meta">    @allure.title(<span class="params"><span class="string">&quot;Login Success - Enter Product List&quot;</span></span>)</span></span><br><span class="line"><span class="meta">    @allure.severity(<span class="params">allure.severity_level.CRITICAL</span>)</span></span><br><span class="line"><span class="meta">    @pytest.mark.smoke</span></span><br><span class="line"><span class="meta">    @pytest.mark.ui</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">test_login_success</span>(<span class="params">self, driver, ui_config</span>):</span><br><span class="line">        data = TEST_DATA[<span class="string">&quot;ui&quot;</span>][<span class="string">&quot;saucedemo&quot;</span>][<span class="string">&quot;valid&quot;</span>]</span><br><span class="line">        login_page = LoginPage(driver, ui_config[<span class="string">&quot;base_url&quot;</span>])</span><br><span class="line">        login_page.<span class="built_in">open</span>()</span><br><span class="line">        login_page.login(data[<span class="string">&quot;username&quot;</span>], data[<span class="string">&quot;password&quot;</span>])</span><br><span class="line"></span><br><span class="line">        inventory = InventoryPage(driver, ui_config[<span class="string">&quot;base_url&quot;</span>])</span><br><span class="line">        <span class="keyword">assert</span> inventory.is_displayed(inventory.PRODUCT_ITEMS)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @pytest.mark.xfail(<span class="params">reason=<span class="string">&quot;Intentionally fail to demo Allure auto screenshot&quot;</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">test_demo_failure_screenshot</span>(<span class="params">self, driver, ui_config</span>):</span><br><span class="line">        data = TEST_DATA[<span class="string">&quot;ui&quot;</span>][<span class="string">&quot;saucedemo&quot;</span>][<span class="string">&quot;valid&quot;</span>]</span><br><span class="line">        login = LoginPage(driver, ui_config[<span class="string">&quot;base_url&quot;</span>])</span><br><span class="line">        login.<span class="built_in">open</span>()</span><br><span class="line">        login.login(data[<span class="string">&quot;username&quot;</span>], data[<span class="string">&quot;password&quot;</span>])</span><br><span class="line">        login.take_screenshot(<span class="string">&quot;Login Success Screenshot&quot;</span>)</span><br><span class="line"></span><br><span class="line">        inventory = InventoryPage(driver, ui_config[<span class="string">&quot;base_url&quot;</span>])</span><br><span class="line">        inventory.add_first_product_to_cart()</span><br><span class="line">        inventory.take_screenshot(<span class="string">&quot;Cart Add Success Screenshot&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 故意失败，触发截图</span></span><br><span class="line">        <span class="keyword">from</span> selenium.webdriver.common.by <span class="keyword">import</span> By</span><br><span class="line">        <span class="keyword">assert</span> inventory.is_displayed((By.ID, <span class="string">&quot;not-exist-element&quot;</span>))</span><br></pre></td></tr></table></figure>
+<p><strong>设计意图</strong>：</p>
+<ul>
+<li><code>@allure.feature</code> / <code>@allure.story</code>：Allure 报告中的层级结构，方便分类查看</li>
+<li><code>@allure.severity(allure.severity_level.CRITICAL)</code>：标记用例优先级，报告中按严重度筛选</li>
+<li><code>@pytest.mark.xfail</code>：预期失败的用例，用于演示失败自动截图功能，失败不计入错误数</li>
+<li><code>with allure.step(&quot;Step X: ...&quot;)</code>：在测试函数内手动划分步骤，报告中生成层级结构</li>
+</ul>
+<hr>
+<h2 id="三、核心代码逐行解析"><a href="#三、核心代码逐行解析" class="headerlink" title="三、核心代码逐行解析"></a>三、核心代码逐行解析</h2><h3 id="3-1-docker-compose-yml-详解"><a href="#3-1-docker-compose-yml-详解" class="headerlink" title="3.1 docker-compose.yml 详解"></a>3.1 <code>docker-compose.yml</code> 详解</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">jenkins:</span></span><br><span class="line">    <span class="attr">build:</span> <span class="string">.</span>                    <span class="comment"># 使用当前目录的 Dockerfile 构建镜像</span></span><br><span class="line">    <span class="attr">container_name:</span> <span class="string">jenkins</span>     <span class="comment"># 容器名称，方便 docker exec/logs</span></span><br><span class="line">    <span class="attr">user:</span> <span class="string">root</span>                  <span class="comment"># 以 root 运行，确保有权限访问 docker.sock</span></span><br><span class="line">    <span class="attr">restart:</span> <span class="string">unless-stopped</span>     <span class="comment"># 宿主机重启后自动启动，除非手动停止</span></span><br><span class="line">    <span class="attr">ports:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;8080:8080&quot;</span>            <span class="comment"># Jenkins Web UI</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;50000:50000&quot;</span>          <span class="comment"># Jenkins Agent 通信端口</span></span><br><span class="line">    <span class="attr">volumes:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">jenkins_home:/var/jenkins_home</span>    <span class="comment"># 命名卷：持久化 Jenkins 数据</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">/var/run/docker.sock:/var/run/docker.sock</span>  <span class="comment"># 绑定挂载：容器内调用宿主机 Docker</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">JAVA_OPTS=-Djenkins.install.runSetupWizard=false</span> <span class="string">-Dhudson.model.DirectoryBrowserSupport.CSP=&quot;...&quot;</span></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">jenkins_home:</span>                 <span class="comment"># 声明命名卷，Docker 自动管理存储路径</span></span><br></pre></td></tr></table></figure>
+<p><strong>Volume 类型对比</strong>：<br>| 类型 | 语法 | 数据存储位置 | 生命周期 |<br>|———|———|——————-|————-|<br>| <strong>命名卷</strong> | <code>jenkins_home:/var/jenkins_home</code> | Docker 管理（<code>/var/lib/docker/volumes/</code>） | 容器删除后保留 |<br>| <strong>绑定挂载</strong> | <code>/host/path:/container/path</code> | 宿主机指定路径 | 容器删除后保留 |<br>| <strong>匿名卷</strong> | <code>/container/path</code>（无冒号左侧） | Docker 自动分配 | 容器删除后可能丢失 |</p>
+<h3 id="3-2-Dockerfile-详解"><a href="#3-2-Dockerfile-详解" class="headerlink" title="3.2 Dockerfile 详解"></a>3.2 <code>Dockerfile</code> 详解</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> jenkins/jenkins:lts       <span class="comment"># 基于官方 LTS 镜像</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">USER</span> root                      <span class="comment"># 切到 root 安装系统软件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y \\</span></span><br><span class="line"><span class="language-bash">    openjdk-21-jre \\           <span class="comment"># Java 运行时（Jenkins 需要）</span></span></span><br><span class="line">    python3 \\                  <span class="comment"># Python 解释器</span></span><br><span class="line">    python3-pip \\              <span class="comment"># pip 包管理器</span></span><br><span class="line">    chromium \\                 <span class="comment"># Chrome 浏览器本体</span></span><br><span class="line">    chromium-driver \\          <span class="comment"># 系统预装的 chromedriver</span></span><br><span class="line">    npm \\                      <span class="comment"># Node.js 包管理器</span></span><br><span class="line">    &amp;&amp; npm install -g allure-commandline --registry=https://registry.npmmirror.com \\</span><br><span class="line">    &amp;&amp; npm cache clean --force \\    <span class="comment"># 清理 npm 缓存，减小镜像体积</span></span><br><span class="line">    &amp;&amp; rm -rf /var/lib/apt/lists/*   <span class="comment"># 清理 apt 缓存，减小镜像体积</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> allure --version &amp;&amp; python3 --version &amp;&amp; chromium --version  <span class="comment"># 构建时验证</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">USER</span> jenkins                   <span class="comment"># 切回 jenkins 用户，安全最佳实践</span></span><br></pre></td></tr></table></figure>
+<p><strong>镜像分层原理</strong>：</p>
+<ul>
+<li>Docker 镜像由多层组成，每层对应一条 <code>RUN/ADD/COPY</code> 指令</li>
+<li>把多个 <code>apt-get install</code> 合并到一条 <code>RUN</code>，减少镜像层数，减小体积</li>
+<li><code>rm -rf /var/lib/apt/lists/*</code>：删除包索引，每层只保留必要文件</li>
+</ul>
+<h3 id="3-3-Jenkinsfile-详解"><a href="#3-3-Jenkinsfile-详解" class="headerlink" title="3.3 Jenkinsfile 详解"></a>3.3 <code>Jenkinsfile</code> 详解</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">pipeline &#123;</span><br><span class="line">    agent any                    <span class="comment">// 任意可用节点执行</span></span><br><span class="line"></span><br><span class="line">    environment &#123;</span><br><span class="line">        PYTHON = <span class="string">&#x27;python3&#x27;</span></span><br><span class="line">        PIP = <span class="string">&#x27;pip3&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stages &#123;</span><br><span class="line">        stage(<span class="string">&#x27;Checkout&#x27;</span>) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                git <span class="attr">branch:</span> <span class="string">&#x27;main&#x27;</span>, <span class="attr">url:</span> <span class="string">&#x27;https://github.com/skying123/qa-portfolio.git&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(<span class="string">&#x27;Install Dependencies&#x27;</span>) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                sh <span class="string">&#x27;$&#123;PIP&#125; install -r requirements.txt --break-system-packages&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(<span class="string">&#x27;Run API Tests&#x27;</span>) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                sh <span class="string">&#x27;$&#123;PYTHON&#125; -m pytest api_tests/ -v --env=prod --alluredir=./allure-results&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        stage(<span class="string">&#x27;Run UI Tests&#x27;</span>) &#123;</span><br><span class="line">            steps &#123;</span><br><span class="line">                sh <span class="string">&#x27;$&#123;PYTHON&#125; -m pytest ui_tests/ -v --env=prod --alluredir=./allure-results&#x27;</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    post &#123;</span><br><span class="line">        always &#123;</span><br><span class="line">            sh <span class="string">&#x27;allure generate ./allure-results -o ./allure-report --clean&#x27;</span></span><br><span class="line">            publishHTML([</span><br><span class="line">                <span class="symbol">allowMissing:</span> <span class="literal">false</span>,</span><br><span class="line">                <span class="symbol">alwaysLinkToLastBuild:</span> <span class="literal">true</span>,</span><br><span class="line">                <span class="symbol">keepAll:</span> <span class="literal">true</span>,</span><br><span class="line">                <span class="symbol">reportDir:</span> <span class="string">&#x27;allure-report&#x27;</span>,</span><br><span class="line">                <span class="symbol">reportFiles:</span> <span class="string">&#x27;index.html&#x27;</span>,</span><br><span class="line">                <span class="symbol">reportName:</span> <span class="string">&#x27;Allure Report&#x27;</span></span><br><span class="line">            ])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Post 阶段解析</strong>：</p>
+<ul>
+<li><code>always</code>：无论构建成功/失败都执行，确保报告总能生成</li>
+<li><code>allure generate</code>：将 <code>allure-results</code>（JSON 原始数据）转换为 <code>allure-report</code>（HTML 可视化报告）</li>
+<li><code>publishHTML</code>：HTML Publisher 插件，将报告目录发布到 Jenkins 页面左侧链接</li>
+<li><code>--clean</code>：生成前清空旧报告，避免数据累积</li>
+</ul>
+<hr>
+<h2 id="四、Jenkins-私有化部署全过程"><a href="#四、Jenkins-私有化部署全过程" class="headerlink" title="四、Jenkins 私有化部署全过程"></a>四、Jenkins 私有化部署全过程</h2><h3 id="4-1-部署流程"><a href="#4-1-部署流程" class="headerlink" title="4.1 部署流程"></a>4.1 部署流程</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 停止旧容器（jenkins_home 卷数据保留）</span></span><br><span class="line">docker compose down</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 重新构建镜像（读取 Dockerfile 预装环境）</span></span><br><span class="line">docker compose up -d --build</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 查看启动日志</span></span><br><span class="line">docker logs -f jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 验证环境</span></span><br><span class="line">docker <span class="built_in">exec</span> jenkins allure --version</span><br><span class="line">docker <span class="built_in">exec</span> jenkins python3 --version</span><br><span class="line">docker <span class="built_in">exec</span> jenkins chromium --version</span><br></pre></td></tr></table></figure>
+<h3 id="4-2-关键设计决策"><a href="#4-2-关键设计决策" class="headerlink" title="4.2 关键设计决策"></a>4.2 关键设计决策</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>决策</th>
+<th>选择</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>官方镜像 vs 自定义 Dockerfile</td>
+<td>自定义 Dockerfile</td>
+<td>官方镜像缺少 Python/Chrome/Allure，手动安装容器销毁后丢失</td>
+</tr>
+<tr>
+<td>系统级 pip vs venv</td>
+<td>系统级 + <code>--break-system-packages</code></td>
+<td>Docker 容器内无需虚拟环境隔离，简化流程</td>
+</tr>
+<tr>
+<td>Allure 安装方式</td>
+<td>npm + 淘宝镜像</td>
+<td>GitHub Release 下载被拒，Maven Central 也可但 npm 更稳</td>
+</tr>
+<tr>
+<td>驱动策略</td>
+<td>三级 fallback</td>
+<td>CI 优先系统预装驱动，本地 fallback 自动下载，兼顾稳定和灵活</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h2 id="五、问题记录与解决方案"><a href="#五、问题记录与解决方案" class="headerlink" title="五、问题记录与解决方案"></a>五、问题记录与解决方案</h2><h3 id="Issue-1：OpenJDK-17-不可用"><a href="#Issue-1：OpenJDK-17-不可用" class="headerlink" title="Issue 1：OpenJDK 17 不可用"></a>Issue 1：OpenJDK 17 不可用</h3><p><strong>现象</strong>：<code>apt-get install openjdk-17-jre-headless</code> 报错 <code>Package is not available</code><br><strong>原因</strong>：Debian 源中 17 版本已被移除，默认提供 21<br><strong>解决</strong>：直接安装 <code>openjdk-21-jre</code>，Jenkins LTS 已官方支持 Java 21</p>
+<h3 id="Issue-2：wget-下载-GitHub-Release-被拒绝"><a href="#Issue-2：wget-下载-GitHub-Release-被拒绝" class="headerlink" title="Issue 2：wget 下载 GitHub Release 被拒绝"></a>Issue 2：wget 下载 GitHub Release 被拒绝</h3><p><strong>现象</strong>：<code>wget https://github.com/.../allure-2.27.0.tgz</code> 连接超时/拒绝<br><strong>原因</strong>：GitHub Release 在国内网络环境不稳定<br><strong>解决</strong>：改用 <strong>npm + 淘宝镜像</strong>安装 Allure CLI</p>
+<h3 id="Issue-3：Dockerfile-中-COPY-requirements-txt-失败"><a href="#Issue-3：Dockerfile-中-COPY-requirements-txt-失败" class="headerlink" title="Issue 3：Dockerfile 中 COPY requirements.txt 失败"></a>Issue 3：Dockerfile 中 COPY requirements.txt 失败</h3><p><strong>现象</strong>：构建报错 <code>&quot;/requirements.txt&quot;: not found</code><br><strong>原因</strong>：构建时上下文只有 Dockerfile 和 docker-compose.yml，requirements.txt 在 GitHub 仓库里<br><strong>解决</strong>：<strong>删除 Dockerfile 中的 COPY 和 pip install</strong>，项目依赖交给 Jenkins Pipeline 运行时安装</p>
+<h3 id="Issue-4：docker-compose-yml-build-语法错误"><a href="#Issue-4：docker-compose-yml-build-语法错误" class="headerlink" title="Issue 4：docker-compose.yml build 语法错误"></a>Issue 4：docker-compose.yml build 语法错误</h3><p><strong>现象</strong>：<code>unable to get image &#39;.&#39;: json: cannot unmarshal array</code><br><strong>原因</strong>：YAML 中 <code>build: .</code> 被误写成了数组格式<br><strong>解决</strong>：确保 <code>build: .</code> 是纯字符串</p>
+<h3 id="Issue-5：PEP-668-阻止-pip-install"><a href="#Issue-5：PEP-668-阻止-pip-install" class="headerlink" title="Issue 5：PEP 668 阻止 pip install"></a>Issue 5：PEP 668 阻止 pip install</h3><p><strong>现象</strong>：<code>error: externally-managed-environment</code><br><strong>原因</strong>：Debian 12+ 禁止向系统级 Python pip install<br><strong>解决</strong>：Jenkinsfile 中加 <code>--break-system-packages</code></p>
+<h3 id="Issue-6：Allure-Jenkins-Plugin-语法不兼容"><a href="#Issue-6：Allure-Jenkins-Plugin-语法不兼容" class="headerlink" title="Issue 6：Allure Jenkins Plugin 语法不兼容"></a>Issue 6：Allure Jenkins Plugin 语法不兼容</h3><p><strong>现象</strong>：<code>Invalid parameter &quot;includeProperties&quot;</code> 等 4 个报错<br><strong>原因</strong>：Allure Jenkins Plugin 2.35.2 与 Declarative Pipeline 参数不匹配<br><strong>解决</strong>：改用 <strong>HTML Publisher Plugin</strong> + <code>allure generate</code> 命令行</p>
+<h3 id="Issue-7：Allure-Report-打开空白"><a href="#Issue-7：Allure-Report-打开空白" class="headerlink" title="Issue 7：Allure Report 打开空白"></a>Issue 7：Allure Report 打开空白</h3><p><strong>现象</strong>：左侧有链接，点击后页面空白<br><strong>原因</strong>：Jenkins 默认 CSP 阻止了 Allure 的 JS/CSS 加载<br><strong>解决</strong>：<code>docker-compose.yml</code> 的 <code>JAVA_OPTS</code> 中放宽 CSP 策略</p>
+<h3 id="Issue-8：Jenkinsfile-位置错误"><a href="#Issue-8：Jenkinsfile-位置错误" class="headerlink" title="Issue 8：Jenkinsfile 位置错误"></a>Issue 8：Jenkinsfile 位置错误</h3><p><strong>现象</strong>：Pipeline 找不到 Jenkinsfile<br><strong>原因</strong>：Jenkinsfile 被放在了 <code>.github/workflows/</code> 目录下<br><strong>解决</strong>：<strong>Jenkinsfile 必须放在仓库根目录</strong></p>
+<h3 id="Issue-9：JMeter-CSV-参数化问题"><a href="#Issue-9：JMeter-CSV-参数化问题" class="headerlink" title="Issue 9：JMeter CSV 参数化问题"></a>Issue 9：JMeter CSV 参数化问题</h3><p><strong>现象</strong>：CSV 数据读取到表头 <code>username=username</code><br><strong>原因</strong>：CSV 文件有 header 行，但 JMeter CSV Data Set Config 已手动指定变量名<br><strong>解决</strong>：删除 CSV 第一行表头</p>
+<h3 id="Issue-10：reqres-in-失效"><a href="#Issue-10：reqres-in-失效" class="headerlink" title="Issue 10：reqres.in 失效"></a>Issue 10：reqres.in 失效</h3><p><strong>现象</strong>：接口返回 401，需要 x-api-key<br><strong>解决</strong>：切换到 <strong>dummyjson.com</strong>，免费无需认证</p>
+<h3 id="Issue-11：PUT-DELETE-请求被拦截"><a href="#Issue-11：PUT-DELETE-请求被拦截" class="headerlink" title="Issue 11：PUT/DELETE 请求被拦截"></a>Issue 11：PUT/DELETE 请求被拦截</h3><p><strong>现象</strong>：返回 404 HTML<br><strong>原因</strong>：公司代理/防火墙可能转换 PUT-&gt;POST<br><strong>解决</strong>：兼容断言 + <code>pytest.skip</code></p>
+<h3 id="Issue-12：xfail-未触发失败截图"><a href="#Issue-12：xfail-未触发失败截图" class="headerlink" title="Issue 12：xfail 未触发失败截图"></a>Issue 12：xfail 未触发失败截图</h3><p><strong>现象</strong>：<code>pytest_runtest_makereport</code> 钩子未对 xfail 失败截图<br><strong>原因</strong>：xfail 失败的 <code>report.outcome</code> 是 <code>skipped</code>，不是 <code>failed</code><br><strong>解决</strong>：条件改为 <code>report.failed or getattr(report, &quot;wasxfail&quot;, False)</code></p>
+<hr>
+<h2 id="六、Pytest-核心知识点与项目应用"><a href="#六、Pytest-核心知识点与项目应用" class="headerlink" title="六、Pytest 核心知识点与项目应用"></a>六、Pytest 核心知识点与项目应用</h2><h3 id="6-1-Fixture-生命周期（Scope）"><a href="#6-1-Fixture-生命周期（Scope）" class="headerlink" title="6.1 Fixture 生命周期（Scope）"></a>6.1 Fixture 生命周期（Scope）</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>scope</th>
+<th>生命周期</th>
+<th>创建次数</th>
+<th>项目应用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>function</code></td>
+<td>每个测试函数</td>
+<td>N 次</td>
+<td><code>driver</code> fixture：每个 UI 测试独立启动/关闭浏览器</td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td>每个测试类</td>
+<td>类数次</td>
+<td>类内共享数据库连接</td>
+</tr>
+<tr>
+<td><code>module</code></td>
+<td>每个测试文件</td>
+<td>文件数次</td>
+<td>模块级资源初始化</td>
+</tr>
+<tr>
+<td><code>session</code></td>
+<td>整个 pytest 进程</td>
+<td>1 次</td>
+<td><code>ui_config</code> fixture：整个测试会话只读一次配置文件</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>项目中的体现</strong>：</p>
+<ul>
+<li><code>driver</code> 是 <code>function</code> scope：保证测试隔离，一个测试崩溃不影响下一个</li>
+<li>如果改成 <code>session</code> scope：浏览器只开一次，跑完所有用例再关，速度更快但测试间会互相污染（比如 Cookie、LocalStorage）</li>
+</ul>
+<h3 id="6-2-Fixture-依赖注入"><a href="#6-2-Fixture-依赖注入" class="headerlink" title="6.2 Fixture 依赖注入"></a>6.2 Fixture 依赖注入</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.fixture</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">user_service</span>(<span class="params">func_db</span>):          <span class="comment"># user_service 依赖 func_db</span></span><br><span class="line">    <span class="keyword">return</span> UserService(func_db)</span><br></pre></td></tr></table></figure>
+<p><strong>项目中的应用</strong>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ui_tests/conftest.py</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">driver</span>(<span class="params">ui_config</span>):              <span class="comment"># driver 依赖 ui_config</span></span><br><span class="line">    <span class="comment"># ui_config 先被创建，再传给 driver</span></span><br><span class="line">    ...</span><br></pre></td></tr></table></figure></p>
+<p>Pytest 会自动解析依赖关系，按拓扑顺序创建 fixture，无需手动管理顺序。</p>
+<h3 id="6-3-参数化测试（Parametrize）"><a href="#6-3-参数化测试（Parametrize）" class="headerlink" title="6.3 参数化测试（Parametrize）"></a>6.3 参数化测试（Parametrize）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;username,password,expected&quot;</span>, [</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;standard_user&quot;</span>, <span class="string">&quot;secret_sauce&quot;</span>, <span class="literal">True</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;locked_out_user&quot;</span>, <span class="string">&quot;secret_sauce&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="literal">False</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_login</span>(<span class="params">username, password, expected</span>):</span><br><span class="line">    result = do_login(username, password)</span><br><span class="line">    <span class="keyword">assert</span> result == expected</span><br></pre></td></tr></table></figure>
+<p><strong>项目中的应用</strong>：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># api_tests/test_auth.py（示例）</span></span><br><span class="line"><span class="meta">@pytest.mark.parametrize(<span class="params"><span class="string">&quot;case_name,payload,expected_status&quot;</span>, [</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;valid_login&quot;</span>, &#123;<span class="string">&quot;username&quot;</span>: <span class="string">&quot;emilys&quot;</span>, <span class="string">&quot;password&quot;</span>: <span class="string">&quot;emilyspass&quot;</span>&#125;, <span class="number">200</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;wrong_password&quot;</span>, &#123;<span class="string">&quot;username&quot;</span>: <span class="string">&quot;emilys&quot;</span>, <span class="string">&quot;password&quot;</span>: <span class="string">&quot;wrong&quot;</span>&#125;, <span class="number">400</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;missing_password&quot;</span>, &#123;<span class="string">&quot;username&quot;</span>: <span class="string">&quot;emilys&quot;</span>&#125;, <span class="number">400</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_login_parametrized</span>(<span class="params">case_name, payload, expected_status, api_client</span>):</span><br><span class="line">    response = api_client.request(<span class="string">&quot;POST&quot;</span>, <span class="string">&quot;/auth/login&quot;</span>, json=payload)</span><br><span class="line">    <span class="keyword">assert</span> response.status_code == expected_status</span><br></pre></td></tr></table></figure></p>
+<p><strong>优势</strong>：一组数据一行代码，Allure 报告中自动生成多条用例记录。</p>
+<h3 id="6-4-标记系统（Markers）"><a href="#6-4-标记系统（Markers）" class="headerlink" title="6.4 标记系统（Markers）"></a>6.4 标记系统（Markers）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.mark.smoke      </span><span class="comment"># 冒烟测试，快速验证核心流程</span></span><br><span class="line"><span class="meta">@pytest.mark.regression </span><span class="comment"># 回归测试，全量执行</span></span><br><span class="line"><span class="meta">@pytest.mark.ui         </span><span class="comment"># UI 自动化标记</span></span><br><span class="line"><span class="meta">@pytest.mark.xfail      </span><span class="comment"># 预期失败，不计入错误</span></span><br></pre></td></tr></table></figure>
+<p><strong>运行方式</strong>：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pytest -v -m smoke              <span class="comment"># 只跑冒烟</span></span><br><span class="line">pytest -v -m <span class="string">&quot;not slow&quot;</span>         <span class="comment"># 排除慢用例</span></span><br><span class="line">pytest -v -m <span class="string">&quot;smoke and ui&quot;</span>     <span class="comment"># 同时满足两个标记</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="6-5-钩子函数（Hooks）"><a href="#6-5-钩子函数（Hooks）" class="headerlink" title="6.5 钩子函数（Hooks）"></a>6.5 钩子函数（Hooks）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@pytest.hookimpl(<span class="params">hookwrapper=<span class="literal">True</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pytest_runtest_makereport</span>(<span class="params">item, call</span>):</span><br><span class="line">    outcome = <span class="keyword">yield</span>           <span class="comment"># 先让 pytest 生成报告</span></span><br><span class="line">    report = outcome.get_result()</span><br><span class="line">    <span class="comment"># 然后拦截报告，做额外操作（截图、日志等）</span></span><br></pre></td></tr></table></figure>
+<p><strong>项目中的应用</strong>：失败自动截图、Allure 附件上传。</p>
+<h3 id="6-6-Monkeypatch（环境模拟）"><a href="#6-6-Monkeypatch（环境模拟）" class="headerlink" title="6.6 Monkeypatch（环境模拟）"></a>6.6 Monkeypatch（环境模拟）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">test_with_mocked_env</span>(<span class="params">monkeypatch</span>):</span><br><span class="line">    monkeypatch.setenv(<span class="string">&quot;API_KEY&quot;</span>, <span class="string">&quot;test_key&quot;</span>)</span><br><span class="line">    <span class="keyword">assert</span> get_api_key() == <span class="string">&quot;test_key&quot;</span></span><br><span class="line">    <span class="comment"># 测试结束后自动恢复原始环境</span></span><br></pre></td></tr></table></figure>
+<p><strong>项目中的应用场景</strong>：模拟不同的环境变量配置，测试配置读取逻辑。</p>
+<hr>
+<h2 id="七、Selenium-核心知识点"><a href="#七、Selenium-核心知识点" class="headerlink" title="七、Selenium 核心知识点"></a>七、Selenium 核心知识点</h2><h3 id="7-1-前进-后退-vs-窗口切换"><a href="#7-1-前进-后退-vs-窗口切换" class="headerlink" title="7.1 前进/后退 vs 窗口切换"></a>7.1 前进/后退 vs 窗口切换</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>方法</th>
+<th>作用对象</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>后退</strong></td>
+<td><code>driver.back()</code></td>
+<td>浏览器历史栈</td>
+<td>从详情页返回列表页，保留筛选条件</td>
+</tr>
+<tr>
+<td><strong>前进</strong></td>
+<td><code>driver.forward()</code></td>
+<td>浏览器历史栈</td>
+<td>历史记录中向前导航</td>
+</tr>
+<tr>
+<td><strong>窗口切换</strong></td>
+<td><code>driver.switch_to.window()</code></td>
+<td>多个浏览器窗口/标签</td>
+<td>点击链接打开新标签后操作新页面</td>
+</tr>
+<tr>
+<td><strong>iframe 切换</strong></td>
+<td><code>driver.switch_to.frame()</code></td>
+<td>页面内嵌框架</td>
+<td>操作 iframe 内的元素</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>面试话术</strong>：</p>
+<blockquote>
+<p>“<code>back()</code> 操作的是同一标签页的历史记录，页面可能从缓存恢复；<code>switch_to.window()</code> 是在多个独立的浏览器实例间切换，每个窗口有独立的 DOM。实际项目中我遇到过 <code>back()</code> 后元素重新渲染导致定位失败的问题，解决方案是结合 <code>WebDriverWait</code> 重新等待元素。”</p>
+</blockquote>
+<h3 id="7-2-显式等待-vs-隐式等待"><a href="#7-2-显式等待-vs-隐式等待" class="headerlink" title="7.2 显式等待 vs 隐式等待"></a>7.2 显式等待 vs 隐式等待</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>显式等待</th>
+<th>隐式等待</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>写法</strong></td>
+<td><code>WebDriverWait(driver, 10).until(EC.xxx)</code></td>
+<td><code>driver.implicitly_wait(10)</code></td>
+</tr>
+<tr>
+<td><strong>作用域</strong></td>
+<td>针对单个元素，灵活</td>
+<td>全局设置，所有 <code>find_element</code> 生效</td>
+</tr>
+<tr>
+<td><strong>等待条件</strong></td>
+<td>丰富（可见、可点击、存在等）</td>
+<td>仅元素存在</td>
+</tr>
+<tr>
+<td><strong>推荐度</strong></td>
+<td>✅ <strong>推荐</strong></td>
+<td>❌ 不推荐（难以调试，容易超时）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>项目中的选择</strong>：<code>driver.implicitly_wait(0)</code> 禁用隐式等待，全部使用 <code>BasePage</code> 中的显式等待。</p>
+<h3 id="7-3-WebDriverManager-与驱动管理"><a href="#7-3-WebDriverManager-与驱动管理" class="headerlink" title="7.3 WebDriverManager 与驱动管理"></a>7.3 WebDriverManager 与驱动管理</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 自动下载匹配版本的 chromedriver</span></span><br><span class="line"><span class="keyword">from</span> webdriver_manager.chrome <span class="keyword">import</span> ChromeDriverManager</span><br><span class="line">service = ChromeService(ChromeDriverManager().install())</span><br></pre></td></tr></table></figure>
+<p><strong>项目中的三级 fallback</strong>：</p>
+<ol>
+<li><code>config.ini</code> 中 <code>driver_path</code> 指向的本地驱动</li>
+<li>系统预装路径（<code>/usr/bin/chromedriver</code>）</li>
+<li>WebDriverManager 自动下载</li>
+</ol>
+<hr>
+<h2 id="八、性能测试基线"><a href="#八、性能测试基线" class="headerlink" title="八、性能测试基线"></a>八、性能测试基线</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>样本数</th>
+<th>平均响应(ms)</th>
+<th>中位数(ms)</th>
+<th>90% Line(ms)</th>
+<th>错误率</th>
+<th>吞吐量(req/s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User Login</td>
+<td>10</td>
+<td>1,748</td>
+<td>1,412</td>
+<td>2,702</td>
+<td>0.00%</td>
+<td>1.61</td>
+</tr>
+<tr>
+<td>Query User List</td>
+<td>500</td>
+<td>858</td>
+<td>748</td>
+<td>1,411</td>
+<td>0.00%</td>
+<td>5.24</td>
+</tr>
+<tr>
+<td>Query Single User</td>
+<td>500</td>
+<td>509</td>
+<td>354</td>
+<td>923</td>
+<td>0.00%</td>
+<td>5.24</td>
+</tr>
+<tr>
+<td><strong>Overall</strong></td>
+<td><strong>1,010</strong></td>
+<td><strong>694</strong></td>
+<td><strong>589</strong></td>
+<td><strong>1,213</strong></td>
+<td><strong>0.00%</strong></td>
+<td><strong>10.28</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>场景</strong>：10 并发用户 × 10 线程组迭代 × 5 业务循环</p>
+<hr>
+<h2 id="九、求职价值提炼"><a href="#九、求职价值提炼" class="headerlink" title="九、求职价值提炼"></a>九、求职价值提炼</h2><h3 id="9-1-项目亮点（面试话术）"><a href="#9-1-项目亮点（面试话术）" class="headerlink" title="9.1 项目亮点（面试话术）"></a>9.1 项目亮点（面试话术）</h3><ol>
+<li><strong>工程化思维</strong>：用 Docker + Jenkins 搭建了完整的私有化 CI/CD 流水线</li>
+<li><strong>标准化框架</strong>：POM 模式 + YAML 数据驱动 + Allure 可视化报告，新同事可快速上手</li>
+<li><strong>性能意识</strong>：不仅做了功能自动化，还用 JMeter 建立了性能基线数据</li>
+<li><strong>问题排查能力</strong>：记录了 12+ 个真实问题及解决方案，体现了落地能力</li>
+<li><strong>成本控制</strong>：Session 复用让 25 条用例从 15s 降到 5s；tenacity 智能重试避免无效服务端压力</li>
+</ol>
+<h3 id="9-2-技术栈匹配度"><a href="#9-2-技术栈匹配度" class="headerlink" title="9.2 技术栈匹配度"></a>9.2 技术栈匹配度</h3><ul>
+<li><strong>Selenium + POM</strong> → 匹配成都 90% 的 Web UI 自动化岗位</li>
+<li><strong>Pytest + Allure</strong> → 匹配互联网公司的 Python 自动化栈</li>
+<li><strong>JMeter + 性能基线</strong> → 加分项，多数测试工程师不具备</li>
+<li><strong>Docker + Jenkins</strong> → DevOps 能力加分，体现持续交付思维</li>
+<li><strong>GitHub Actions + Jenkins 双流水线</strong> → 既有公网展示，又有私有化部署经验</li>
+</ul>
+<h3 id="9-3-薪资谈判支撑"><a href="#9-3-薪资谈判支撑" class="headerlink" title="9.3 薪资谈判支撑"></a>9.3 薪资谈判支撑</h3><ul>
+<li>项目完整度：从框架设计 → 代码实现 → CI/CD 部署 → 可视化报告，<strong>全链路闭环</strong></li>
+<li>技术深度：不是简单的脚本堆砌，而是考虑了<strong>多环境支持、智能重试、数据分离、容器化部署</strong></li>
+<li>可演示性：面试时可以直接打开 Jenkins 展示实时构建和 Allure 报告，<strong>说服力极强</strong></li>
+</ul>
+<hr>
+<h2 id="十、关键命令速查"><a href="#十、关键命令速查" class="headerlink" title="十、关键命令速查"></a>十、关键命令速查</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ========== 环境检查 ==========</span></span><br><span class="line">python --version</span><br><span class="line">python -m venv venv</span><br><span class="line"><span class="built_in">source</span> venv/bin/activate</span><br><span class="line">pip install -r requirements.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># ========== 本地运行测试 ==========</span></span><br><span class="line">pytest api_tests/ -v --<span class="built_in">env</span>=dev --alluredir=./allure-results</span><br><span class="line">pytest ui_tests/ -v --<span class="built_in">env</span>=dev --alluredir=./allure-results</span><br><span class="line">pytest -v -m smoke --<span class="built_in">env</span>=dev --alluredir=./allure-results</span><br><span class="line">pytest api_tests/test_auth.py::TestAuth::test_login_success -v</span><br><span class="line"></span><br><span class="line"><span class="comment"># ========== 查看报告 ==========</span></span><br><span class="line">allure serve ./allure-results</span><br><span class="line"></span><br><span class="line"><span class="comment"># ========== Docker 操作 ==========</span></span><br><span class="line">docker compose up -d --build</span><br><span class="line">docker compose down</span><br><span class="line">docker logs -f jenkins</span><br><span class="line">docker <span class="built_in">exec</span> jenkins allure --version</span><br><span class="line"></span><br><span class="line"><span class="comment"># ========== JMeter 非 GUI 运行 ==========</span></span><br><span class="line">jmeter -n -t performance/jmeter/dummyjson_load_test.jmx \\</span><br><span class="line">       -l performance/jmeter/result.jtl \\</span><br><span class="line">       -e -o performance/jmeter/html-report</span><br><span class="line"></span><br><span class="line"><span class="comment"># ========== Git 操作 ==========</span></span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;description&quot;</span></span><br><span class="line">git push origin main</span><br><span class="line"></span><br><span class="line"><span class="comment"># ========== 语法检查 ==========</span></span><br><span class="line">python -m py_compile utils/api_client.py</span><br><span class="line"></span><br><span class="line"><span class="comment"># ========== 收集测试（不运行） ==========</span></span><br><span class="line">pytest api_tests/ --collect-only -v</span><br></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p><strong>结语</strong>：从 0 到 1 搭建一套完整的自动化测试框架 + CI/CD 流水线，不仅是技术能力的体现，更是工程化思维和问题解决能力的证明。这个项目足以支撑 15K-17K 的薪资谈判，甚至在面试中成为降维打击的亮点。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://skying123.github.io">skying123</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://skying123.github.io/2026/05/26/QA_Portfolio_%E5%AE%8C%E6%95%B4%E5%A4%8D%E7%9B%98%E4%B8%8EPytest%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/">https://skying123.github.io/2026/05/26/QA_Portfolio_%E5%AE%8C%E6%95%B4%E5%A4%8D%E7%9B%98%E4%B8%8EPytest%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://skying123.github.io" target="_blank">skying123的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/allure/">allure</a><a class="post-meta__tags" href="/tags/github/">github</a><a class="post-meta__tags" href="/tags/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">项目实战</a><a class="post-meta__tags" href="/tags/pytest/">pytest</a><a class="post-meta__tags" href="/tags/selenium/">selenium</a><a class="post-meta__tags" href="/tags/CI-CD/">CI/CD</a><a class="post-meta__tags" href="/tags/Jenkins/">Jenkins</a></div><div class="post_share"><div class="social-share" data-image="/img/index.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/05/26/Allure_%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B_%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E9%A1%B9%E7%9B%AE%E9%9B%86%E6%88%90/" title="Allure 详细教程：从入门到项目集成"><img class="cover" src="/img/post.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Allure 详细教程：从入门到项目集成</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2026/05/26/Allure_%E8%AF%A6%E7%BB%86%E6%95%99%E7%A8%8B_%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E9%A1%B9%E7%9B%AE%E9%9B%86%E6%88%90/" title="Allure 详细教程：从入门到项目集成"><img class="cover" src="/img/post.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-26</div><div class="title">Allure 详细教程：从入门到项目集成</div></div></a></div><div><a href="/2026/05/25/Git%E5%AE%89%E8%A3%85%E4%B8%8EGitHub%E5%8D%8F%E4%BD%9C%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/" title="Git安装与GitHub协作完全指南"><img class="cover" src="/img/post.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2026-05-25</div><div class="title">Git安装与GitHub协作完全指南</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">skying123</div><div class="author-info__description">skying123的博客</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">48</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">17</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/skying123"><i class="fab fa-github"></i><span>跟我来</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/xxxxx" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:1966796674@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">我的记录博客</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#QA-Portfolio-%E9%A1%B9%E7%9B%AE%E5%AE%8C%E6%95%B4%E5%A4%8D%E7%9B%98%E4%B8%8E-Pytest-%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%E6%96%87%E6%A1%A3"><span class="toc-number">1.</span> <span class="toc-text">QA Portfolio 项目完整复盘与 Pytest 深度解析文档</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95"><span class="toc-number">1.1.</span> <span class="toc-text">目录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.2.</span> <span class="toc-text">一、技术架构设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.1 项目结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B"><span class="toc-number">1.2.2.</span> <span class="toc-text">1.2 核心技术选型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.3.</span> <span class="toc-text">二、项目结构与文件详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%B1%82"><span class="toc-number">1.3.1.</span> <span class="toc-text">2.1 配置文件层</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pytest-ini-%E2%80%94%E2%80%94-Pytest-%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">pytest.ini —— Pytest 全局配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#config-dev-ini-%E4%B8%8E-config-prod-ini-%E2%80%94%E2%80%94-%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">config&#x2F;dev.ini 与 config&#x2F;prod.ini —— 多环境配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#data-users-yaml-%E2%80%94%E2%80%94-%E7%BB%9F%E4%B8%80%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%BF%83"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">data&#x2F;users.yaml —— 统一测试数据中心</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD%E5%B1%82"><span class="toc-number">1.3.2.</span> <span class="toc-text">2.2 基础设施层</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#utils-config-reader-py-%E2%80%94%E2%80%94-%E9%85%8D%E7%BD%AE%E8%AF%BB%E5%8F%96%E5%99%A8"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">utils&#x2F;config_reader.py —— 配置读取器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#utils-api-client-py-%E2%80%94%E2%80%94-%E7%94%9F%E4%BA%A7%E7%BA%A7-API-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">utils&#x2F;api_client.py —— 生产级 API 客户端</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-POM-%E9%A1%B5%E9%9D%A2%E5%AF%B9%E8%B1%A1%E5%B1%82"><span class="toc-number">1.3.3.</span> <span class="toc-text">2.3 POM 页面对象层</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pages-base-page-py-%E2%80%94%E2%80%94-%E6%89%80%E6%9C%89%E9%A1%B5%E9%9D%A2%E7%9A%84%E5%9F%BA%E7%B1%BB"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">pages&#x2F;base_page.py —— 所有页面的基类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pages-login-page-py-%E2%80%94%E2%80%94-%E7%99%BB%E5%BD%95%E9%A1%B5%E9%9D%A2%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">pages&#x2F;login_page.py —— 登录页面对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-Fixture-%E4%B8%8E%E9%92%A9%E5%AD%90%E5%B1%82"><span class="toc-number">1.3.4.</span> <span class="toc-text">2.4 Fixture 与钩子层</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B9%E7%9B%AE%E5%BD%95-conftest-py-%E2%80%94%E2%80%94-%E5%85%A8%E5%B1%80%E5%8F%82%E6%95%B0%E6%B3%A8%E5%86%8C"><span class="toc-number">1.3.4.1.</span> <span class="toc-text">根目录 conftest.py —— 全局参数注册</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ui-tests-conftest-py-%E2%80%94%E2%80%94-Driver-%E7%AE%A1%E7%90%86%E4%B8%8E%E5%A4%B1%E8%B4%A5%E6%88%AA%E5%9B%BE"><span class="toc-number">1.3.4.2.</span> <span class="toc-text">ui_tests&#x2F;conftest.py —— Driver 管理与失败截图</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B%E5%B1%82"><span class="toc-number">1.3.5.</span> <span class="toc-text">2.5 测试用例层</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ui-tests-test-e2e-py-%E2%80%94%E2%80%94-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%B5%8B%E8%AF%95"><span class="toc-number">1.3.5.1.</span> <span class="toc-text">ui_tests&#x2F;test_e2e.py —— 端到端测试</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E6%A0%B8%E5%BF%83%E4%BB%A3%E7%A0%81%E9%80%90%E8%A1%8C%E8%A7%A3%E6%9E%90"><span class="toc-number">1.4.</span> <span class="toc-text">三、核心代码逐行解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-docker-compose-yml-%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.4.1.</span> <span class="toc-text">3.1 docker-compose.yml 详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-Dockerfile-%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.4.2.</span> <span class="toc-text">3.2 Dockerfile 详解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-Jenkinsfile-%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.4.3.</span> <span class="toc-text">3.3 Jenkinsfile 详解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81Jenkins-%E7%A7%81%E6%9C%89%E5%8C%96%E9%83%A8%E7%BD%B2%E5%85%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">1.5.</span> <span class="toc-text">四、Jenkins 私有化部署全过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E9%83%A8%E7%BD%B2%E6%B5%81%E7%A8%8B"><span class="toc-number">1.5.1.</span> <span class="toc-text">4.1 部署流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E5%86%B3%E7%AD%96"><span class="toc-number">1.5.2.</span> <span class="toc-text">4.2 关键设计决策</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95%E4%B8%8E%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">1.6.</span> <span class="toc-text">五、问题记录与解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-1%EF%BC%9AOpenJDK-17-%E4%B8%8D%E5%8F%AF%E7%94%A8"><span class="toc-number">1.6.1.</span> <span class="toc-text">Issue 1：OpenJDK 17 不可用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-2%EF%BC%9Awget-%E4%B8%8B%E8%BD%BD-GitHub-Release-%E8%A2%AB%E6%8B%92%E7%BB%9D"><span class="toc-number">1.6.2.</span> <span class="toc-text">Issue 2：wget 下载 GitHub Release 被拒绝</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-3%EF%BC%9ADockerfile-%E4%B8%AD-COPY-requirements-txt-%E5%A4%B1%E8%B4%A5"><span class="toc-number">1.6.3.</span> <span class="toc-text">Issue 3：Dockerfile 中 COPY requirements.txt 失败</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-4%EF%BC%9Adocker-compose-yml-build-%E8%AF%AD%E6%B3%95%E9%94%99%E8%AF%AF"><span class="toc-number">1.6.4.</span> <span class="toc-text">Issue 4：docker-compose.yml build 语法错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-5%EF%BC%9APEP-668-%E9%98%BB%E6%AD%A2-pip-install"><span class="toc-number">1.6.5.</span> <span class="toc-text">Issue 5：PEP 668 阻止 pip install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-6%EF%BC%9AAllure-Jenkins-Plugin-%E8%AF%AD%E6%B3%95%E4%B8%8D%E5%85%BC%E5%AE%B9"><span class="toc-number">1.6.6.</span> <span class="toc-text">Issue 6：Allure Jenkins Plugin 语法不兼容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-7%EF%BC%9AAllure-Report-%E6%89%93%E5%BC%80%E7%A9%BA%E7%99%BD"><span class="toc-number">1.6.7.</span> <span class="toc-text">Issue 7：Allure Report 打开空白</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-8%EF%BC%9AJenkinsfile-%E4%BD%8D%E7%BD%AE%E9%94%99%E8%AF%AF"><span class="toc-number">1.6.8.</span> <span class="toc-text">Issue 8：Jenkinsfile 位置错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-9%EF%BC%9AJMeter-CSV-%E5%8F%82%E6%95%B0%E5%8C%96%E9%97%AE%E9%A2%98"><span class="toc-number">1.6.9.</span> <span class="toc-text">Issue 9：JMeter CSV 参数化问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-10%EF%BC%9Areqres-in-%E5%A4%B1%E6%95%88"><span class="toc-number">1.6.10.</span> <span class="toc-text">Issue 10：reqres.in 失效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-11%EF%BC%9APUT-DELETE-%E8%AF%B7%E6%B1%82%E8%A2%AB%E6%8B%A6%E6%88%AA"><span class="toc-number">1.6.11.</span> <span class="toc-text">Issue 11：PUT&#x2F;DELETE 请求被拦截</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Issue-12%EF%BC%9Axfail-%E6%9C%AA%E8%A7%A6%E5%8F%91%E5%A4%B1%E8%B4%A5%E6%88%AA%E5%9B%BE"><span class="toc-number">1.6.12.</span> <span class="toc-text">Issue 12：xfail 未触发失败截图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81Pytest-%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9%E4%B8%8E%E9%A1%B9%E7%9B%AE%E5%BA%94%E7%94%A8"><span class="toc-number">1.7.</span> <span class="toc-text">六、Pytest 核心知识点与项目应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-Fixture-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%EF%BC%88Scope%EF%BC%89"><span class="toc-number">1.7.1.</span> <span class="toc-text">6.1 Fixture 生命周期（Scope）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-Fixture-%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5"><span class="toc-number">1.7.2.</span> <span class="toc-text">6.2 Fixture 依赖注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E5%8F%82%E6%95%B0%E5%8C%96%E6%B5%8B%E8%AF%95%EF%BC%88Parametrize%EF%BC%89"><span class="toc-number">1.7.3.</span> <span class="toc-text">6.3 参数化测试（Parametrize）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E6%A0%87%E8%AE%B0%E7%B3%BB%E7%BB%9F%EF%BC%88Markers%EF%BC%89"><span class="toc-number">1.7.4.</span> <span class="toc-text">6.4 标记系统（Markers）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-5-%E9%92%A9%E5%AD%90%E5%87%BD%E6%95%B0%EF%BC%88Hooks%EF%BC%89"><span class="toc-number">1.7.5.</span> <span class="toc-text">6.5 钩子函数（Hooks）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-6-Monkeypatch%EF%BC%88%E7%8E%AF%E5%A2%83%E6%A8%A1%E6%8B%9F%EF%BC%89"><span class="toc-number">1.7.6.</span> <span class="toc-text">6.6 Monkeypatch（环境模拟）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81Selenium-%E6%A0%B8%E5%BF%83%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.8.</span> <span class="toc-text">七、Selenium 核心知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E5%89%8D%E8%BF%9B-%E5%90%8E%E9%80%80-vs-%E7%AA%97%E5%8F%A3%E5%88%87%E6%8D%A2"><span class="toc-number">1.8.1.</span> <span class="toc-text">7.1 前进&#x2F;后退 vs 窗口切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E6%98%BE%E5%BC%8F%E7%AD%89%E5%BE%85-vs-%E9%9A%90%E5%BC%8F%E7%AD%89%E5%BE%85"><span class="toc-number">1.8.2.</span> <span class="toc-text">7.2 显式等待 vs 隐式等待</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-WebDriverManager-%E4%B8%8E%E9%A9%B1%E5%8A%A8%E7%AE%A1%E7%90%86"><span class="toc-number">1.8.3.</span> <span class="toc-text">7.3 WebDriverManager 与驱动管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E5%9F%BA%E7%BA%BF"><span class="toc-number">1.9.</span> <span class="toc-text">八、性能测试基线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%B1%82%E8%81%8C%E4%BB%B7%E5%80%BC%E6%8F%90%E7%82%BC"><span class="toc-number">1.10.</span> <span class="toc-text">九、求职价值提炼</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#9-1-%E9%A1%B9%E7%9B%AE%E4%BA%AE%E7%82%B9%EF%BC%88%E9%9D%A2%E8%AF%95%E8%AF%9D%E6%9C%AF%EF%BC%89"><span class="toc-number">1.10.1.</span> <span class="toc-text">9.1 项目亮点（面试话术）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-2-%E6%8A%80%E6%9C%AF%E6%A0%88%E5%8C%B9%E9%85%8D%E5%BA%A6"><span class="toc-number">1.10.2.</span> <span class="toc-text">9.2 技术栈匹配度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-3-%E8%96%AA%E8%B5%84%E8%B0%88%E5%88%A4%E6%94%AF%E6%92%91"><span class="toc-number">1.10.3.</span> <span class="toc-text">9.3 薪资谈判支撑</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E5%85%B3%E9%94%AE%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5"><span class="toc-number">1.11.</span> <span class="toc-text">十、关键命令速查</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/index.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2026 By skying123</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">I wish you to become your own sun, no need to rely on who's light.<p><a target="_blank" href="https://hexo.io/"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&logo=hexo" title="博客框架为Hexo"></a>&nbsp;<a target="_blank" href="https://butterfly.js.org/"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&logo=bitdefender" title="主题采用butterfly"></a>&nbsp;<a target="_blank" href="https://www.jsdelivr.com/"><img src="https://img.shields.io/badge/CDN-jsDelivr-orange?style=flat&logo=jsDelivr" title="本站使用JsDelivr为静态资源提供CDN加速"></a> &nbsp;<a target="_blank" href="https://vercel.com/ "><img src="https://img.shields.io/badge/Hosted-Vervel-brightgreen?style=flat&logo=Vercel" title="本站采用双线部署，默认线路托管于Vercel"></a>&nbsp;<a target="_blank" href="https://vercel.com/ "><img src="https://img.shields.io/badge/Hosted-Coding-0cedbe?style=flat&logo=Codio" title="本站采用双线部署，联通线路托管于Coding"></a>&nbsp;<a target="_blank" href="https://github.com/"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&logo=GitHub" title="本站项目由Gtihub托管"></a>&nbsp;<a target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&logo=Claris" title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可"></a></p></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.12.0"></script><script src="/js/main.js?v=4.12.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@5.2.0/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar@0.1.16/dist/snackbar.min.js"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'default' : 'light'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.12.0"></script></div></div></body></html>
